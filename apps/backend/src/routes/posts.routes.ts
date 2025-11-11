@@ -5,8 +5,8 @@ const router = Router();
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-router.post("/posts/", postPost);
-router.patch("/posts/:id", patchPostById);
-router.delete("/posts/:id", deletePostById);
+router.post("/", postPost);
+router.patch("/:id", patchPostById);
+router.delete("/:id", deletePostById);
 
 export default router;
