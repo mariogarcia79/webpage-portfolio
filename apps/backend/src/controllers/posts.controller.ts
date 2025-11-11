@@ -6,7 +6,7 @@ export function getAllPosts(req: Request, res: Response) {
 }
 
 export function getPostById(req: Request, res: Response) {
-  const post = postService.getPostById(Number(req.params.id));
+  const post = postService.getPostById(req.params.id);
   if (!post) 
     return res.status(404).json({ error: "Post not found" });
   res.json(post);
@@ -24,8 +24,7 @@ export function postPost(req: Request, res: Response) {
 }
 
 export function patchPostById(req: Request, res: Response) {
-  const id = Number(req.params.id);
-  const updated = postService.patchPostById(id, req.body);
+  const updated = postService.patchPostById(req.params.id, req.body);
 
   if (!updated)
     return res.status(404).json({ error: "Post not found" });
@@ -34,6 +33,5 @@ export function patchPostById(req: Request, res: Response) {
 }
 
 export function deletePostById(req: Request, res: Response) {
-  const id = Number(req.params.id);
-  postService.deletePostById(id);
+  postService.deletePostById(req.params.id);
 }

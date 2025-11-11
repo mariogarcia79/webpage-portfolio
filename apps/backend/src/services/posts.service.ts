@@ -1,42 +1,34 @@
-import { Post } from "../types/post.js";
+import PostModel, { IPostDocument } from "../models/Post.js";
 
-const posts: Post[] = [
-  { id: 1, title: "First Post", summary: "First Post's summary", content: "First Post's content", createdAt: new Date(2025,6,7), published: true },
-  { id: 2, title: "Second Post", summary: "Second Post's summary", content: "Second Post's content", createdAt: new Date(2025,10,11), published: true }
-];
-
-export function getAllPosts(): Post[] {
-  return posts;
+export async function getAllPosts(): Promise<IPostDocument[]> {
+  return await PostModel.find({ published: true }).sort({ createdAt: -1 });
 }
 
-export function getPostById(id: number): Post | undefined {
-  return posts.find(post => post.id === id);
+export async function getPostById(id: string): Promise<IPostDocument | null> {
+  return await PostModel.findById(id);
 }
 
-export function patchPostById(id: number, partial: Partial<Post>) {
-  const post = getPostById(id);
-  if (!post) return null;
-  Object.assign(post, partial);
+export async function patchPostById(id: string, partial: Partial<IPostDocument>): Promise<IPostDocument | null> {
+  const post = await PostModel.findByIdAndUpdate(id, partial, { new: true });
   return post;
 }
 
-export function postPost(title: string, summary: string, content: string) {
-  const newPost: Post = {
-    id: posts.length > 0 ? posts[posts.length - 1].id + 1 : 1,
-    title: title,
-    summary: summary,
-    content: content,
+export async function postPost(title: string, summary: string, content: string): Promise<IPostDocument> {
+  const newPost = new PostModel({
+    title,
+    summary,
+    content,
     createdAt: new Date(),
-    published: true
-  };
-  posts.push(newPost);
-  return newPost;
+    published: true,
+  });
+  return await newPost.save();
 }
 
-export function deletePostById(id: number) {
-    const post = getPostById(id);
+export async function deletePostById(id: string): Promise<boolean> {
+  const post = await PostModel.findById(id);
   if (!post) return false;
 
   post.published = false;
+  await post.save();
   return true;
 }
