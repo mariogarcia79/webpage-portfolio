@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { getAllPosts, getPostById, patchPostById } from "../controllers/admin.controller.js";
+import { getAllPosts, getPostById } from "../controllers/posts.controller.js";
 
 const router = Router();
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-
-router.patch("/:id", patchPostById);
 
 export default router;

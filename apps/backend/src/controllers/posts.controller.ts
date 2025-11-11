@@ -11,13 +11,3 @@ export function getPostById(req: Request, res: Response) {
     return res.status(404).json({ error: "Post not found" });
   res.json(post);
 }
-
-export function patchPostById(req: Request, res: Response) {
-  const id = Number(req.params.id);
-  const updated = postService.patchPostById(id, req.body);
-
-  if (!updated)
-    return res.status(404).json({ error: "Post not found" });
-
-  res.json(updated);
-}

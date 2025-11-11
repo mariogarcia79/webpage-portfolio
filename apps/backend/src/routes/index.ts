@@ -1,5 +1,5 @@
 import { Router } from "express";
-import entriesRoutes from "./entries.routes.js";
+import postsRoutes from "./posts.routes.js";
 import adminRoutes from "./admin.routes.js";
 
 const router = Router();
@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   res.json({ message: "/" });
 });
 
-router.use("/entries", entriesRoutes);
+router.use("/posts", postsRoutes);
 
 router.use("/admin", adminRoutes);
 
