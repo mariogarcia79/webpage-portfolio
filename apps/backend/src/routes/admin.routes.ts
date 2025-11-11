@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { getAllPosts, getPostById, patchPostById } from "../controllers/admin.controller.js";
+import { getAllPosts, getPostById, postPost, patchPostById, deletePostById } from "../controllers/admin.controller.js";
 
 const router = Router();
 
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-
+router.post("/", postPost);
 router.patch("/:id", patchPostById);
+router.delete("/:id", deletePostById);
 
 export default router;

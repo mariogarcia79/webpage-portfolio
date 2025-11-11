@@ -4,4 +4,5 @@ export interface Post {
   summary: string;
   content: string;
   createdAt: Date;
+  published: boolean;
 }
