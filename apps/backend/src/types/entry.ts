@@ -1,7 +1,7 @@
-export interface Post {
+export interface Entry {
   id: number;
   title: string;
   summary: string;
   content: string;
-  createdAt: string;
+  createdAt: Date;
 }
