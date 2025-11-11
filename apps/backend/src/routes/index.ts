@@ -5,7 +5,7 @@ import adminRoutes from "./admin.routes.js";
 const router = Router();
 
 router.get("/", (req, res) => {
-  res.json({ message: "/" });
+  res.json({ route: "/" });
 });
 
 router.use("/posts", postsRoutes);

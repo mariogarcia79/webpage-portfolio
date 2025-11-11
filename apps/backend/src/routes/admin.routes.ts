@@ -1,15 +1,10 @@
 import { Router } from "express";
-import { getAllPosts, getPostById, postPost, patchPostById, deletePostById } from "../controllers/admin.controller.js";
 import { getAdminDashboard } from "../controllers/admin.controller.js";
+import postsRoutes from "./posts.routes.js"
 
 const router = Router();
 
 router.get("/", getAdminDashboard);
-
-router.get("/posts", getAllPosts);
-router.get("/posts/:id", getPostById);
-router.post("/posts/", postPost);
-router.patch("/posts/:id", patchPostById);
-router.delete("/posts/:id", deletePostById);
+router.get("/posts", postsRoutes);
 
 export default router;
