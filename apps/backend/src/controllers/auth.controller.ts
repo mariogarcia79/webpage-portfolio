@@ -29,7 +29,7 @@ class AuthController {
   }
 
   static async logIn(req: Request, res: Response): Promise<Response> {
-    const { name, hash } = req.body;
+    const { name, password } = req.body;
 
     try {
       const user = await UserService.getUserByName(name);
@@ -38,7 +38,7 @@ class AuthController {
         return res.status(400).json({ message: 'User not found' });
       }
 
-      const isMatch = await bcrypt.compare(hash, user.hash);
+      const isMatch = await bcrypt.compare(password, user.hash);
 
       if (!isMatch) {
         return res.status(400).json({ message: 'Incorrect hash' });
