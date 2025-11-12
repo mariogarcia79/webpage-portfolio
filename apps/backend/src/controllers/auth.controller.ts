@@ -2,27 +2,25 @@ import { Request, Response } from "express";
 import AuthService from "../services/auth.service";
 import UserService from "../services/users.service";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
-const secret = process.env.JWT_SECRET || 'default_secret';
+const secret = process.env.JWT_SECRET || "default_secret";
 
 class AuthController {
 
-  // Método estático para registrar un nuevo usuario
   static async signUp(req: Request, res: Response): Promise<Response> {
-    const { name, email, password } = req.body;
+    const { name, email, hash } = req.body;
 
-    // Validación de campos
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Name, email, and password are required" });
+    if (!name || !email || !hash) {
+      return res.status(400).json({ error: "Name, email, and hash are required" });
     }
 
     try {
-      // Crear nuevo usuario usando el servicio estático
-      const newUser = await AuthService.signUp(name, email, password);
+      const hashedPassword = await bcrypt.hash(hash, 10);
+      const newUser = await AuthService.signUp(name, email, hashedPassword);
       return res.status(201).json(newUser);
     } catch (error: unknown) {
       console.error(error);
-      // Comprobamos si el error es una instancia de Error
       if (error instanceof Error) {
         return res.status(500).json({ message: "Error creating user", error: error.message });
       }
@@ -30,32 +28,27 @@ class AuthController {
     }
   }
 
-  // Método estático para iniciar sesión de un usuario
   static async logIn(req: Request, res: Response): Promise<Response> {
-    const { name, password } = req.body;
+    const { name, hash } = req.body;
 
     try {
-      // Obtener usuario por nombre
-      const user = await UserService.getUserByName(name); // Usamos el método estático getUserByName
+      const user = await UserService.getUserByName(name);
 
-      // Verificar si el usuario existe
       if (!user) {
         return res.status(400).json({ message: 'User not found' });
       }
 
-      // Verificar la contraseña
-      if (user.password !== password) {
-        return res.status(400).json({ message: 'Incorrect password' });
+      const isMatch = await bcrypt.compare(hash, user.hash);
+
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Incorrect hash' });
       }
 
-      // Crear JWT
       const token = jwt.sign({ userId: user.id.toString() }, secret, { expiresIn: '1h' });
 
-      // Devolver el token
       return res.json({ token });
     } catch (error: unknown) {
       console.error(error);
-      // Comprobamos si el error es una instancia de Error
       if (error instanceof Error) {
         return res.status(500).json({ message: 'Error processing the request', error: error.message });
       }
@@ -64,5 +57,4 @@ class AuthController {
   }
 }
 
-// Exportar la clase directamente
 export default AuthController;

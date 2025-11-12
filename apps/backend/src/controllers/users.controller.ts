@@ -3,7 +3,6 @@ import UserService from "../services/users.service";
 
 class UserController {
 
-  // Obtener todos los usuarios con parámetros de filtro
   static async getAllUsers(req: Request, res: Response): Promise<Response> {
     const name = req.query.name as string;
     
@@ -15,12 +14,10 @@ class UserController {
         console.error(error);
         return res.status(500).json({ message: "Error fetching users", error: error.message });
       }
-      // Si el error no es una instancia de Error, puedes retornar un mensaje genérico
       return res.status(500).json({ message: "Unknown error occurred" });
     }
   }
 
-  // Obtener un usuario por su ID
   static async getUserById(req: Request, res: Response): Promise<Response> {
     try {
       const user = await UserService.getUserById(req.params.id);
@@ -37,7 +34,6 @@ class UserController {
     }
   }
 
-  // Actualizar un usuario por su ID
   static async patchUserById(req: Request, res: Response): Promise<Response> {
     try {
       const updatedUser = await UserService.patchUserById(req.params.id, req.body);
@@ -54,14 +50,13 @@ class UserController {
     }
   }
 
-  // Eliminar un usuario por su ID (marcar como inactivo)
   static async deleteUserById(req: Request, res: Response): Promise<Response> {
     try {
       const isDeleted = await UserService.deleteUserById(req.params.id);
       if (!isDeleted) {
         return res.status(404).json({ error: "User not found" });
       }
-      return res.status(204).send();  // No content response
+      return res.status(204).send();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error);
