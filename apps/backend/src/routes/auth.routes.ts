@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { signUp, logIn } from "../controllers/auth.controller";
+import AuthController from "../controllers/auth.controller"; // Importa la clase con métodos estáticos
 
 const router = Router();
 
-router.post("/signup", signUp);
-router.post("/login", logIn);
+// Asigna los métodos estáticos de AuthController directamente a las rutas
+router.post("/signup", AuthController.signUp);
+router.post("/login", AuthController.logIn);
 
 export default router;

@@ -1,14 +1,12 @@
 import { Router } from "express";
-import { 
-  getAllUsers, getUserById,
-  patchUserById, deleteUserById 
-} from "../controllers/users.controller"
+import UserController from "../controllers/users.controller";
 
 const router = Router();
 
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
-router.patch("/:id", patchUserById);
-router.delete("/:id", deleteUserById);
+// Usando los métodos estáticos de UserController
+router.get("/", UserController.getAllUsers);
+router.get("/:id", UserController.getUserById);
+router.patch("/:id", UserController.patchUserById);
+router.delete("/:id", UserController.deleteUserById);
 
 export default router;

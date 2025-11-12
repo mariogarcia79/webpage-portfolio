@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { getAllPosts, getPostById, postPost, patchPostById, deletePostById } from "../controllers/posts.controller";
+import PostController from "../controllers/posts.controller"; // Importamos la clase PostController con métodos estáticos
 
 const router = Router();
 
-router.get("/", getAllPosts);
-router.get("/:id", getPostById);
-router.post("/", postPost);
-router.patch("/:id", patchPostById);
-router.delete("/:id", deletePostById);
+// Asignamos los métodos estáticos de PostController directamente a las rutas
+router.get("/", PostController.getAllPosts);
+router.get("/:id", PostController.getPostById);
+router.post("/", PostController.postPost);
+router.patch("/:id", PostController.patchPostById);
+router.delete("/:id", PostController.deletePostById);
 
 export default router;

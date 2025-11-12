@@ -1,10 +1,18 @@
-import UserModel, { IUserDocument } from "../models/User"
+import UserModel, { IUserDocument } from "../models/User";
 
-export async function postUser(name: string, email: string, password: string): Promise<IUserDocument> {
-  const newPost = new UserModel({
-    name,
-    email,
-    password
-  });
-  return await newPost.save();
+class AuthService {
+
+  // Método estático para crear un nuevo usuario
+  static async signUp(name: string, email: string, password: string): Promise<IUserDocument> {
+    const newUser = new UserModel({
+      name,
+      email,
+      password
+    });
+    
+    // Guardamos y retornamos el nuevo usuario
+    return await newUser.save();
+  }
 }
+
+export default AuthService;
