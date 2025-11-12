@@ -9,14 +9,14 @@ const secret = process.env.JWT_SECRET || "default_secret";
 class AuthController {
 
   static async signUp(req: Request, res: Response): Promise<Response> {
-    const { name, email, hash } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!name || !email || !hash) {
+    if (!name || !email || !password) {
       return res.status(400).json({ error: "Name, email, and hash are required" });
     }
 
     try {
-      const hashedPassword = await bcrypt.hash(hash, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = await AuthService.signUp(name, email, hashedPassword);
       return res.status(201).json(newUser);
     } catch (error: unknown) {

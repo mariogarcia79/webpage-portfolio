@@ -7,7 +7,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    return res.status(401).json({ message: 'Acceso no autorizado' });
+    return res.redirect("/login");
   }
 
   try {
