@@ -1,7 +1,7 @@
-import UserModel, { IUserDocument } from "../models/User.js"
+import UserModel, { IUserDocument } from "../models/User"
 
-export async function getAllUsers(): Promise<IUserDocument[]> {
-  return await UserModel.find().sort({ name: -1 });
+export async function getAllUsers({ sorted, active = true, name }: { sorted: boolean, active: boolean, name?: string }): Promise<IUserDocument[]> {
+  return await UserModel.find({ active, name }).sort({ name: -1 });
 }
 
 export async function getUserById(id: string): Promise<IUserDocument | null> {
@@ -9,21 +9,12 @@ export async function getUserById(id: string): Promise<IUserDocument | null> {
 }
 
 export async function getUserByName(name: string): Promise<IUserDocument | null> {
-  return await UserModel.findOne({ name: name });
+  return await UserModel.findOne({ name });
 }
 
 export async function patchUserById(id: string, partial: Partial<IUserDocument>): Promise<IUserDocument | null> {
   const user = await UserModel.findByIdAndUpdate(id, partial, { new: true });
   return user;
-}
-
-export async function postUser(name: string, email: string, password: string): Promise<IUserDocument> {
-  const newPost = new UserModel({
-    name,
-    email,
-    password
-  });
-  return await newPost.save();
 }
 
 export async function deleteUserById(id: string): Promise<boolean> {

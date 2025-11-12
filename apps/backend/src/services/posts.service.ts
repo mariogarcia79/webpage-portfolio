@@ -1,4 +1,4 @@
-import PostModel, { IPostDocument } from "../models/Post.js";
+import PostModel, { IPostDocument } from "../models/Post";
 
 export async function getAllPosts(): Promise<IPostDocument[]> {
   return await PostModel.find({ published: true }).sort({ createdAt: -1 });

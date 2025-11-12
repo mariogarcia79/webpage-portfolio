@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as postService from "../services/posts.service.js";
+import * as postService from "../services/posts.service";
 
 export function getAllPosts(req: Request, res: Response) {
   res.json(postService.getAllPosts());
