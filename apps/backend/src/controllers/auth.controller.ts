@@ -63,8 +63,12 @@ class AuthController {
       if (!isMatch) {
         return res.status(400).json({ message: 'Incorrect hash' });
       }
-
-      const token = jwt.sign({ userId: user.id.toString() }, secret, { expiresIn: '1h' });
+      
+      const token = jwt.sign(
+        { userId: user._id, role: user.role as "admin" | "user", email: user.email },
+        secret,
+        { expiresIn: '1h' }
+      );
 
       return res.json({ token });
     } catch (error: unknown) {
