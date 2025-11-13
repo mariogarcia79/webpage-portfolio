@@ -1,0 +1,98 @@
+/* Reiniciar márgenes y paddings para todo */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  font-family: 'Roboto Mono', monospace;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Permitimos scroll vertical pero no horizontal */
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Login.module.css */
+
+.page-container {
+  width: 100vw;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000; /* fondo negro */
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #000000;
+  border: 1px solid #ffffff; /* borde blanco */
+  padding: 2rem;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.input:focus {
+  border-color: #ffffff;
+}
+
+.error {
+  color: #ff5252;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.button {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

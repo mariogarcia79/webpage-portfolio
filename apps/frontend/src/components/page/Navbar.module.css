@@ -1,0 +1,48 @@
+/* Navbar.module.css */
+
+.navbar {
+  width: 100%;
+  height: 60px;
+  background-color: #000000; /* fondo negro */
+  color: #ffffff; /* texto blanco */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* todo a la derecha */
+  padding: 0 2rem;
+  border-bottom: 1px solid #ffffff; /* borde blanco abajo */
+  box-sizing: border-box;
+  font-family: 'Roboto Mono', monospace;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  gap: 1.5rem; /* separación entre todos los elementos */
+}
+
+.navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #f0f0f0;
+}
+
+.navbar button {
+  padding: 0.5rem 1rem;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar button:hover {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  transition: 0.3s;
+}

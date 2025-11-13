@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import PostAPI from '../api/posts.api';
+import PostAPI from '../../api/posts.api';
+import { useAuth } from '../../context/AuthContext';
+import styles from './BlogEditor.module.css';
 
 function BlogEditor() {
   const navigate = useNavigate();
-  const { id } = useParams(); // Si hay id, estamos editando
+  const { id } = useParams<{ id: string }>();
+  const { token, isLoggedIn } = useAuth();
+
   const [title, setTitle] = useState<string>('');
   const [summary, setSummary] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -12,43 +16,43 @@ function BlogEditor() {
   const [loading, setLoading] = useState<boolean>(false);
   const isEditing = !!id;
 
-  // Cargar el post si estamos editando
   useEffect(() => {
-    if (id) {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    if (id && token) {
+      setLoading(true);
       PostAPI.getPostById(id)
         .then((post) => {
           setTitle(post.title);
           setSummary(post.summary);
           setContent(post.content);
         })
-        .catch(() => setError('Failed to load post'));
+        .catch(() => setError('Failed to load post'))
+        .finally(() => setLoading(false));
     }
-  }, [id]);
+  }, [id, token]);
 
   const handleSubmit = async (): Promise<void> => {
+    if (!token) {
+      setError('You must be logged in');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
-      
-      const token = localStorage.getItem('token') || '';
-      
-      if (!token) {
-        setError('You must be logged in');
-        return;
-      }
-      
+
       if (isEditing && id) {
-        // Actualizar post existente
         await PostAPI.updatePost(id, { title, summary, content }, token);
-        console.log('Post updated');
       } else {
-        // Crear nuevo post
         await PostAPI.createPost(title, summary, content, token);
-        console.log('Post created');
       }
-      
+
       navigate('/blog');
-      
     } catch (err) {
       setError(`Failed to ${isEditing ? 'update' : 'create'} post. Please try again.`);
       console.error('Error:', err);
@@ -58,46 +62,41 @@ function BlogEditor() {
   };
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">
+    <div className={styles['page-container']}>
+      <h2 className={styles.title}>
         {isEditing ? 'Edit Post' : 'Create New Post'}
       </h2>
-      
-      {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded mb-3">
-          {error}
-        </div>
-      )}
-      
+
+      {error && <div className={styles.error}>{error}</div>}
+
       <input
         type="text"
         placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-2 mb-3 border rounded"
+        className={styles.input}
         disabled={loading}
       />
-      
-      <input
-        type="text"
+
+      <textarea
         placeholder="Summary"
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
-        className="w-full p-2 mb-3 border rounded"
+        className={styles.textarea}
         disabled={loading}
       />
-      
+
       <textarea
         placeholder="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="w-full p-2 mb-3 border rounded h-64"
+        className={styles.textarea}
         disabled={loading}
       />
-      
+
       <button
         onClick={handleSubmit}
-        className="w-full bg-blue-500 text-white p-2 rounded disabled:bg-blue-300"
+        className={styles.button}
         disabled={loading || !title || !summary || !content}
       >
         {loading ? 'Saving...' : isEditing ? 'Update Post' : 'Create Post'}

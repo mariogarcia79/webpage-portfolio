@@ -1,20 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import SignUp   from './components/SignUp';
-import LogIn    from './components/LogIn';
-import BlogList from './components/BlogList';
-import BlogPost from './components/BlogPost';
-import BlogEditor from './components/BlogEditor';
+import Navbar from "./components/page/Navbar";
+import SignUp   from './components/auth/SignUp';
+import LogIn    from './components/auth/LogIn';
+import BlogList from './components/blog/BlogList';
+import BlogPost from './components/blog/BlogPost';
+import BlogEditor from './components/blog/BlogEditor';
 
 function App() {
   return (
     <Router>
       <header>
-        <nav>
-          <Link to="/">       Home    </Link> |
-          <Link to="/blog">   Blog    </Link> |
-          <Link to="/signup"> Sign Up </Link> |
-          <Link to="/login">  Log In  </Link>
-        </nav>
+        <Navbar />
       </header>
 
       <main>
@@ -34,7 +30,7 @@ function App() {
                 <Link to="/blog">Go to Blog</Link>
               </div>
             }
-          />
+          />*/
         </Routes>
       </main>
     </Router>
