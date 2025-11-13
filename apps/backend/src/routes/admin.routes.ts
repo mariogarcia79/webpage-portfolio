@@ -8,5 +8,7 @@ router.post("/signup-admin", AuthController.createAdmin);
 
 //TODO: Get self information
 //TODO: Post about me
+//TODO: Get logs
+//TODO: Settings
 
 export default router;
