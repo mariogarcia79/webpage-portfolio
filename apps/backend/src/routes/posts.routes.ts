@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { authenticate } from "../middleware/auth.middleware";
+import { authenticate, checkRole } from "../middleware/auth.middleware";
 import PostController from "../controllers/posts.controller";
 
 const router = Router();
 
-router.get("/", PostController.getAllPosts);
-router.get("/:id", PostController.getPostById);
-router.post("/", authenticate, PostController.postPost);
-router.patch("/:id", authenticate, PostController.patchPostById);
-router.delete("/:id", authenticate, PostController.deletePostById);
+router.get(   "/",    PostController.getAllPosts);
+router.get(   "/:id", PostController.getPostById);
+router.post(  "/",    authenticate, checkRole("admin"), PostController.postPost);
+router.patch( "/:id", authenticate, checkRole("admin"), PostController.patchPostById);
+router.delete("/:id", authenticate, checkRole("admin"), PostController.deletePostById);
 
 export default router;
