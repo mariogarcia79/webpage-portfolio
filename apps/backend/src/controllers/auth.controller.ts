@@ -28,6 +28,26 @@ class AuthController {
     }
   }
 
+  static async createAdmin(req: Request, res: Response): Promise<Response> {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Name, email, and hash are required" });
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = await AuthService.createAdmin(name, email, hashedPassword);
+      return res.status(201).json(newUser);
+    } catch (error: unknown) {
+      console.error(error);
+      if (error instanceof Error) {
+        return res.status(500).json({ message: "Error creating user", error: error.message });
+      }
+      return res.status(500).json({ message: "Unknown error" });
+    }
+  }
+
   static async logIn(req: Request, res: Response): Promise<Response> {
     const { name, password } = req.body;
 
