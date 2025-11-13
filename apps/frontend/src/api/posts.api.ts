@@ -1,6 +1,5 @@
 import { Post } from '../types/post';
-
-const API_BASE_URL = 'http://localhost:4000/api';
+import { API_BASE_URL } from '../constants/constants';
 
 class PostAPI {
   static async getAllPosts(): Promise<Post[]> {

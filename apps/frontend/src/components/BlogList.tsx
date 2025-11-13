@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import PostAPI from '../api/posts.api';
 import { Post } from '../types/post';
+import PostAPI from '../api/posts.api';
 
-const BlogList: React.FC = () => {
+function BlogList() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -25,6 +25,6 @@ const BlogList: React.FC = () => {
       </ul>
     </div>
   );
-};
+}
 
 export default BlogList;
