@@ -1,7 +1,9 @@
 :root {
-  --color-dark: #1c110a;
-  --color-neon-orange: #ff521b;
-  --color-blue: #247ba0;
-  --color-white: #eff7ff;
-  --color-neon-green: #dced31;
+  --color-text-0: #c5c8c6;
+  --color-text-1: #707880;
+  --color-dark-0: #1d1f21;
+  --color-dark-1: #282a2e;
+  --color-accent-general: #81a2be;
+  --color-accent-warning: #cc6666;
+  --color-accent-note: #f0c674;
 }

@@ -11,7 +11,6 @@ const Navbar = () => {
       <Link to="/blog">Blog</Link>
       {isLoggedIn ? (
         <>
-          <Link to="/dashboard">Dashboard</Link>
           <button onClick={logout}>Log Out</button>
         </>
       ) : (
