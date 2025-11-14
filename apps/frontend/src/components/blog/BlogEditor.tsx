@@ -75,14 +75,14 @@ function BlogEditor() {
         placeholder="Summary"
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
-        className="textarea"
+        className="textarea post-summary"
         disabled={loading}
       />
       <textarea
         placeholder="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="textarea"
+        className="textarea post-content"
         disabled={loading}
       />
       <button

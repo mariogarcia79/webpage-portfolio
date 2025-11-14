@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { Post } from '../../types/post';
 import PostAPI from '../../api/posts.api';
-import { useAuth } from '../../context/AuthContext';
+import MarkdownRenderer from './MarkdownRenderer';
 
 function BlogPost() {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +39,9 @@ function BlogPost() {
       <div className="post-content">
         <h1 className="title large left"> # {post.title}</h1>
         <div className="post-summary">{post.summary}</div>
-        <div className="post-body">{post.content}</div>
+        <div className="post-body">
+          <MarkdownRenderer content={post.content}/>
+        </div>
       </div>
     </div>
   );

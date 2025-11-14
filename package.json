@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "prismjs": "^1.30.0",
+    "react-markdown": "^10.1.0",
+    "rehype-prism-plus": "^2.0.1"
+  }
+}
