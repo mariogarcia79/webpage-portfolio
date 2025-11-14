@@ -32,6 +32,11 @@ html, body {
   overflow-y: auto;
 }
 
+::selection {
+  background: var(--color-accent-general);   /* color de fondo de la selección */
+  color: var(--color-dark-0);         /* color del texto seleccionado */
+}
+
 /* ============================================
    PAGE CONTAINERS
 ============================================ */
@@ -199,6 +204,14 @@ html, body {
   gap: 20px;
 }
 
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+}
+
 .post-item {
   display: flex;
   flex-direction: column;
@@ -213,6 +226,13 @@ html, body {
 
 .post-title:hover {
   text-decoration: underline;
+}
+
+.post-date {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-text-0);
+  text-decoration: none;
 }
 
 .post-content {
@@ -283,6 +303,13 @@ html, body {
 
 .navbar a:hover {
   color: #f0f0f0;
+}
+
+.navbar a.active {
+  color: var(--color-accent-general);
+  font-weight: bold;
+  border-bottom: 2px solid var(--color-accent-general);
+  padding-bottom: 2px;
 }
 
 .navbar button {

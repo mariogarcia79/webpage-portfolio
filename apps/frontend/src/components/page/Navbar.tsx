@@ -1,19 +1,42 @@
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
 
   return (
     <nav className="navbar">
-      <Link to="/">Home</Link>
-      <Link to="/blog">Blog</Link>
+      <NavLink 
+        to="/" 
+        className={({ isActive }) => isActive ? "active" : undefined}
+      >
+        Home
+      </NavLink>
+
+      <NavLink 
+        to="/blog"
+        className={({ isActive }) => isActive ? "active" : undefined}
+      >
+        Blog
+      </NavLink>
+
       {isLoggedIn ? (
         <button onClick={logout}>Log Out</button>
       ) : (
         <>
-          <Link to="/login">Log In</Link>
-          <Link to="/signup">Sign Up</Link>
+          <NavLink
+            to="/login"
+            className={({ isActive }) => isActive ? "active" : undefined}
+          >
+            Log In
+          </NavLink>
+
+          <NavLink
+            to="/signup"
+            className={({ isActive }) => isActive ? "active" : undefined}
+          >
+            Sign Up
+          </NavLink>
         </>
       )}
     </nav>

@@ -40,9 +40,12 @@ function BlogList() {
         <ul className="post-list">
           {posts.map((p) => (
             <li key={p._id} className="post-item">
-              <Link to={`/blog/${p._id}`} className="post-title">
-                # {p.title}
-              </Link>
+              <div className="post-header">
+                <Link to={`/blog/${p._id}`} className="post-title">
+                  # {p.title}
+                </Link>
+                <div className="post-date">{p.createdAt.split("T")[0]}</div>
+              </div>
               <div className="post-summary margin">{p.summary}</div>
             </li>
           ))}
