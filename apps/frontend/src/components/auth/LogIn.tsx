@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
-import styles from './Login.module.css';
-import '../../styles/variables.css';
 
 function Login() {
   const { login } = useAuth();
@@ -28,18 +26,16 @@ function Login() {
   };
 
   return (
-    <div className={styles['page-container']}>
-      <div className={styles.container}>
-        <h2 className={styles.title}>Login</h2>
-
-        {error && <div className={styles.error}>{error}</div>}
-
+    <div className="page-container centered">
+      <div className="container">
+        <h2 className="title">Login</h2>
+        {error && <div className="error">{error}</div>}
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={styles.input}
+          className="input"
           disabled={loading}
         />
         <input
@@ -47,12 +43,12 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className={styles.input}
+          className="input"
           disabled={loading}
         />
         <button
           onClick={handleLogin}
-          className={styles.button}
+          className="button"
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Login'}

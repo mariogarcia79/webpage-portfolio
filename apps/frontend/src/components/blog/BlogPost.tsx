@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { Post } from '../../types/post';
 import PostAPI from '../../api/posts.api';
 import { useAuth } from '../../context/AuthContext';
-import styles from './BlogPost.module.css';
 
 function BlogPost() {
   const { id } = useParams<{ id: string }>();
@@ -19,28 +18,27 @@ function BlogPost() {
 
   if (!post) {
     return (
-      <div className={styles['page-container']}>
-        <Link to="/blog" className={styles['back-link']}>Back</Link>
+      <div className="page-container">
+        <Link to="/blog" className="link">Back</Link>
         <p>No post found</p>
       </div>
     );
   }
 
   return (
-    <div className={styles['page-container']}>
-      <div className={styles.header}>
-        <Link to="/blog" className={styles['back-link']}>Back</Link>
+    <div className="page-container">
+      <div className="header post">
+        <Link to="/blog" className="link">Back</Link>
         {isLoggedIn && (
-          <Link to={`/blog/edit/${id}`} className={styles['edit-button']}>
+          <Link to={`/blog/edit/${id}`} className="button compact">
             Edit Post
           </Link>
         )}
       </div>
-
-      <div className={styles['post-content']}>
-        <h1 className={styles.title}>{post.title}</h1>
-        <div className={styles.summary}>{post.summary}</div>
-        <div className={styles.content}>{post.content}</div>
+      <div className="post-content">
+        <h1 className="title large left"> # {post.title}</h1>
+        <div className="post-summary">{post.summary}</div>
+        <div className="post-body">{post.content}</div>
       </div>
     </div>
   );

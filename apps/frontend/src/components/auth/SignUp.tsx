@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
-import styles from './Signup.module.css';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -15,10 +14,8 @@ function SignUp() {
     try {
       setLoading(true);
       setError('');
-
       const response = await AuthAPI.signUp(name, email, password);
       console.log('Signup successful:', response);
-
       navigate('/login');
     } catch (err) {
       setError('Signup failed. Please try again.');
@@ -29,18 +26,16 @@ function SignUp() {
   };
 
   return (
-    <div className={styles['page-container']}>
-      <div className={styles['container']}>
-        <h2 className={styles['title']}>Sign Up</h2>
-
+    <div className="page-container centered">
+      <div className="container">
+        <h2 className="title">Sign Up</h2>
         {error && (
-          <div className={styles['error']}>
+          <div className="error">
             {error}
           </div>
         )}
-
         <form
-          className={styles['form']}
+          className="form"
           onSubmit={(e) => { e.preventDefault(); handleSignup(); }}
         >
           <input
@@ -48,7 +43,7 @@ function SignUp() {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={styles['input']}
+            className="input"
             disabled={loading}
           />
           <input
@@ -56,7 +51,7 @@ function SignUp() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={styles['input']}
+            className="input"
             disabled={loading}
           />
           <input
@@ -64,12 +59,12 @@ function SignUp() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={styles['input']}
+            className="input"
             disabled={loading}
           />
           <button
             type="submit"
-            className={styles['button']}
+            className="button"
             disabled={loading}
           >
             {loading ? 'Creating account...' : 'Sign Up'}

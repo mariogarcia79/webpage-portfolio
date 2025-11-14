@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PostAPI from '../../api/posts.api';
 import { useAuth } from '../../context/AuthContext';
-import styles from './BlogEditor.module.css';
 
 function BlogEditor() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { token, isLoggedIn } = useAuth();
-
   const [title, setTitle] = useState<string>('');
   const [summary, setSummary] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -45,13 +43,11 @@ function BlogEditor() {
     try {
       setLoading(true);
       setError('');
-
       if (isEditing && id) {
         await PostAPI.updatePost(id, { title, summary, content }, token);
       } else {
         await PostAPI.createPost(title, summary, content, token);
       }
-
       navigate('/blog');
     } catch (err) {
       setError(`Failed to ${isEditing ? 'update' : 'create'} post. Please try again.`);
@@ -62,41 +58,36 @@ function BlogEditor() {
   };
 
   return (
-    <div className={styles['page-container']}>
-      <h2 className={styles.title}>
+    <div className="page-container">
+      <h2 className="title">
         {isEditing ? 'Edit Post' : 'Create New Post'}
       </h2>
-
-      {error && <div className={styles.error}>{error}</div>}
-
+      {error && <div className="error block">{error}</div>}
       <input
         type="text"
         placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className={styles.input}
+        className="input wide"
         disabled={loading}
       />
-
       <textarea
         placeholder="Summary"
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
-        className={styles.textarea}
+        className="textarea"
         disabled={loading}
       />
-
       <textarea
         placeholder="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className={styles.textarea}
+        className="textarea"
         disabled={loading}
       />
-
       <button
         onClick={handleSubmit}
-        className={styles.button}
+        className="button wide"
         disabled={loading || !title || !summary || !content}
       >
         {loading ? 'Saving...' : isEditing ? 'Update Post' : 'Create Post'}

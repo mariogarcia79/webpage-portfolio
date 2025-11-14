@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Post } from '../../types/post';
 import PostAPI from '../../api/posts.api';
 import { useAuth } from '../../context/AuthContext';
-import styles from './BlogList.module.css';
 
 function BlogList() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -24,28 +23,27 @@ function BlogList() {
   }, []);
 
   return (
-    <div className={styles['page-container']}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Blog</h1>
+    <div className="page-container list">
+      <div className="header">
+        <h1 className="title large left">Blog</h1>
         {isLoggedIn && (
-          <Link to="/blog/new" className={styles['new-post-button']}>
+          <Link to="/blog/new" className="button compact">
             New post
           </Link>
         )}
       </div>
-
       {loading ? (
         <p>Loading posts...</p>
       ) : error ? (
-        <p className={styles.error}>{error}</p>
+        <p className="error">{error}</p>
       ) : (
-        <ul className={styles['post-list']}>
+        <ul className="post-list">
           {posts.map((p) => (
-            <li key={p._id} className={styles['post-item']}>
-              <Link to={`/blog/${p._id}`} className={styles['post-title']}>
-                {p.title}
+            <li key={p._id} className="post-item">
+              <Link to={`/blog/${p._id}`} className="post-title">
+                # {p.title}
               </Link>
-              <div className={styles['post-summary']}>{p.summary}</div>
+              <div className="post-summary margin">{p.summary}</div>
             </li>
           ))}
         </ul>
@@ -55,4 +53,3 @@ function BlogList() {
 }
 
 export default BlogList;
-
