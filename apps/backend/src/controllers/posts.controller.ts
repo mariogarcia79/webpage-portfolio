@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import PostService from "../services/posts.service";
+import { sanitizeText, isObjectId } from '../utils/validation';
 
 class PostController {
 
@@ -22,7 +23,10 @@ class PostController {
   // Método estático para obtener un post por su ID
   static async getPostById(req: Request, res: Response): Promise<Response> {
     try {
-      const post = await PostService.getPostById(req.params.id); // Usar el servicio para obtener el post por ID
+      const id = req.params.id;
+      if (!isObjectId(id)) return res.status(400).json({ error: 'Invalid post id' });
+
+      const post = await PostService.getPostById(id); // Usar el servicio para obtener el post por ID
       if (!post) {
         return res.status(404).json({ error: "Post not found" });
       }
@@ -42,14 +46,22 @@ class PostController {
   static async postPost(req: Request, res: Response): Promise<Response> {
     const { title, summary, content } = req.body;
 
-    // Validación de los parámetros
+    // Basic validation
     if (!title || !summary || !content) {
       return res.status(400).json({ error: "Title, summary, and content are required" });
     }
 
+    if (typeof title !== 'string' || title.length > 300) return res.status(400).json({ error: 'Invalid title' });
+    if (typeof summary !== 'string' || summary.length > 1000) return res.status(400).json({ error: 'Invalid summary' });
+    if (typeof content !== 'string' || content.length > 20000) return res.status(400).json({ error: 'Invalid content' });
+
+    const cleanTitle = sanitizeText(title);
+    const cleanSummary = sanitizeText(summary);
+    const cleanContent = sanitizeText(content);
+
     try {
       // Llamada al servicio para crear el post
-      const newPost = await PostService.postPost(title, summary, content); // Usar el servicio para crear el post
+  const newPost = await PostService.postPost(cleanTitle, cleanSummary, cleanContent); // Usar el servicio para crear el post
       return res.status(201).json(newPost);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -65,7 +77,16 @@ class PostController {
   // Método estático para actualizar un post por su ID
   static async patchPostById(req: Request, res: Response): Promise<Response> {
     try {
-      const updatedPost = await PostService.patchPostById(req.params.id, req.body); // Usar el servicio para actualizar el post
+      const id = req.params.id;
+      if (!isObjectId(id)) return res.status(400).json({ error: 'Invalid post id' });
+
+      // sanitize allowed fields
+      const body: any = {};
+      if (req.body.title) body.title = sanitizeText(req.body.title);
+      if (req.body.summary) body.summary = sanitizeText(req.body.summary);
+      if (req.body.content) body.content = sanitizeText(req.body.content);
+
+      const updatedPost = await PostService.patchPostById(id, body); // Usar el servicio para actualizar el post
       if (!updatedPost) {
         return res.status(404).json({ error: "Post not found" });
       }

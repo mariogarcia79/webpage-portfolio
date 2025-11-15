@@ -65,7 +65,7 @@ html, body {
 .page-container.centered {
   justify-content: center;
   overflow: hidden;
-  padding: 1rem;
+  padding: 12rem;
 }
 
 /* For blog list */

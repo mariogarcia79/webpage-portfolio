@@ -9,13 +9,23 @@ class PostService {
 
   // Obtener un post por su ID
   static async getPostById(id: string): Promise<IPostDocument | null> {
-    return await PostModel.findById(id);
+    // guard against invalid ObjectId to avoid CastError
+    if (!id) return null;
+    try {
+      return await PostModel.findById(id);
+    } catch (err) {
+      return null;
+    }
   }
 
   // Actualizar un post por su ID
   static async patchPostById(id: string, partial: Partial<IPostDocument>): Promise<IPostDocument | null> {
-    const post = await PostModel.findByIdAndUpdate(id, partial, { new: true });
-    return post;
+    try {
+      const post = await PostModel.findByIdAndUpdate(id, partial, { new: true });
+      return post;
+    } catch (err) {
+      return null;
+    }
   }
 
   // Crear un nuevo post
@@ -32,12 +42,16 @@ class PostService {
 
   // Eliminar un post por su ID (marcar como no publicado)
   static async deletePostById(id: string): Promise<boolean> {
-    const post = await PostModel.findById(id);
-    if (!post) return false;
+    try {
+      const post = await PostModel.findById(id);
+      if (!post) return false;
 
-    post.published = false;
-    await post.save();
-    return true;
+      post.published = false;
+      await post.save();
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }
 

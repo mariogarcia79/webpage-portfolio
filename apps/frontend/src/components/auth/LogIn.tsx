@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
 
 function Login() {
@@ -27,7 +27,7 @@ function Login() {
 
   return (
     <div className="page-container centered">
-      <div className="container">
+      <div className="container login">
         <h2 className="title">Login</h2>
         {error && <div className="error">{error}</div>}
         <input
@@ -53,6 +53,13 @@ function Login() {
         >
           {loading ? 'Loading...' : 'Login'}
         </button>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "4px" }}>
+          <p>
+            Or{" "}
+            <Link to="/signup" className="link login">sign up</Link>
+            {" "}to make an account.
+          </p>
+        </div>
       </div>
     </div>
   );

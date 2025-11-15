@@ -2,12 +2,18 @@ import UserModel, { IUserDocument } from "../models/User";
 
 class UserService {
 
-  static async getAllUsers({ sorted, active = true, name }: { sorted: boolean, active: boolean, name?: string }): Promise<IUserDocument[]> {
-    return await UserModel.find({ active, name }).sort({ name: sorted ? 1 : -1 });
+  static async getAllUsers({ sorted, active = true, name }: { sorted: boolean, active: boolean, name?: string | RegExp }): Promise<IUserDocument[]> {
+    const filter: any = { active };
+    if (name) filter.name = name;
+    return await UserModel.find(filter).sort({ name: sorted ? 1 : -1 });
   }
 
   static async getUserById(id: string): Promise<IUserDocument | null> {
-    return await UserModel.findById(id);
+    try {
+      return await UserModel.findById(id);
+    } catch (err) {
+      return null;
+    }
   }
 
   static async getUserByName(name: string): Promise<IUserDocument | null> {
