@@ -1,4 +1,5 @@
 import UserModel, { IUserDocument } from "../models/User";
+import bcrypt from "bcryptjs"
 
 class UserService {
 
@@ -18,6 +19,14 @@ class UserService {
 
   static async getUserByName(name: string): Promise<IUserDocument | null> {
     return await UserModel.findOne({ name });
+  }
+
+  static async validateCredentials(name: string, password: string): Promise<IUserDocument | null> {
+    const user = await UserModel.findOne({ name, active: true });
+    if (!user) return null;
+
+    const match = await bcrypt.compare(password, user.hash);
+    return match ? user : null;
   }
 
   static async patchUserById(id: string, partial: Partial<IUserDocument>): Promise<IUserDocument | null> {

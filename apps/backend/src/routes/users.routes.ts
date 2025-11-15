@@ -1,14 +1,13 @@
 import { Router } from "express";
 import UserController from "../controllers/users.controller";
-import { authenticate, checkRole } from "../middleware/auth.middleware";
+import { authenticate, checkRole, validateUserId } from "../middleware/auth.middleware";
 
 const router = Router();
 
 router.get(   "/",    authenticate, checkRole("admin"), UserController.getAllUsers);
 
-//TODO: Verify only THE user and admin can do these operations
-router.get(   "/:id", authenticate, UserController.getUserById);
-router.patch( "/:id", authenticate, UserController.patchUserById);
-router.delete("/:id", authenticate, UserController.deleteUserById);
+router.get(   "/:id", authenticate, validateUserId, UserController.getUserById);
+router.patch( "/:id", authenticate, validateUserId, UserController.patchUserById);
+router.delete("/:id", authenticate, validateUserId, UserController.deleteUserById);
 
 export default router;

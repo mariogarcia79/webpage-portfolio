@@ -39,3 +39,21 @@ export function checkRole(...allowedRoles: ("admin" | "user")[]) {
     next();
   };
 }
+
+export const validateUserId = (req: Request, res: Response, next: NextFunction) => {
+  const routeUserId = req.params.id;
+
+  if (!req.user) {
+    return res.redirect("/login");
+  }
+
+  if (req.user.role === "admin") {
+    return next();
+  }
+
+  if (req.user.userId !== routeUserId) {
+    return res.status(403).send("You can't access this resource.");
+  }
+
+  next();
+};

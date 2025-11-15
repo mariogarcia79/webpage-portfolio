@@ -9,17 +9,19 @@ const Navbar = () => {
 
   useEffect(() => {
     lastY.current = window.scrollY;
+
     const onScroll = () => {
       const current = window.scrollY;
-      // if scrolling down and scrolled more than 80px hide
+
       if (current > lastY.current && current > 80) {
-        setHidden(true);
+        setHidden(true); // Scroll down → hide
       } else if (current < lastY.current) {
-        // scrolling up -> show
-        setHidden(false);
+        setHidden(false); // Scroll up → show
       }
+
       lastY.current = current;
     };
+
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -41,7 +43,15 @@ const Navbar = () => {
       </NavLink>
 
       {isLoggedIn ? (
-        <button onClick={logout}>Log Out</button>
+        <>
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => isActive ? "active" : undefined}
+          >
+            Dashboard
+          </NavLink>
+          <button onClick={logout}>Log Out</button>
+        </>
       ) : (
         <>
           <NavLink

@@ -7,10 +7,11 @@ import { validateLogin } from '../../utils/validation';
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [name, setName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (): Promise<void> => {
     const clientError = validateLogin(name, password);
@@ -22,11 +23,17 @@ function Login() {
     try {
       setLoading(true);
       setError('');
+
       const response = await AuthAPI.logIn(name.trim(), password);
+
       login(response.token);
+
       navigate('/blog');
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || 'Login failed. Please check your credentials.';
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Login failed. Please check your credentials.';
       setError(String(msg));
     } finally {
       setLoading(false);
@@ -36,8 +43,10 @@ function Login() {
   return (
     <div className="page-container centered">
       <div className="container login">
-        <h2 className="title">Login</h2>
+        <h2 className="title left">Login</h2>
+
         {error && <div className="error">{error}</div>}
+
         <input
           type="text"
           placeholder="Name"
@@ -46,6 +55,7 @@ function Login() {
           className="input"
           disabled={loading}
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -54,6 +64,7 @@ function Login() {
           className="input"
           disabled={loading}
         />
+
         <button
           onClick={handleLogin}
           className="button"
@@ -61,7 +72,15 @@ function Login() {
         >
           {loading ? 'Loading...' : 'Login'}
         </button>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "4px" }}>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "4px"
+          }}
+        >
           <p>
             Or{" "}
             <Link to="/signup" className="link login">sign up</Link>

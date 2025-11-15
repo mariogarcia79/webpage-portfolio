@@ -9,8 +9,10 @@ import {
 interface AuthContextType {
   token: string | null;
   role: string | null;
+  userId: string | null;
   isLoggedIn: boolean;
-  login: (newToken: string) => void;
+
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -21,76 +23,76 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const savedToken = sessionStorage.getItem("token");
-  const savedRole = sessionStorage.getItem("role");
-  const [token, setToken] = useState<string | null>(savedToken);
-  const [role, setRole] = useState<string | null>(savedRole);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!savedToken);
+  // Helper to parse JWT payload
+  const parseJwt = (token: string | null) => {
+    if (!token) return null;
+    try {
+      const payloadJson = atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"));
+      return JSON.parse(payloadJson);
+    } catch {
+      return null;
+    }
+  };
 
+  const parseUserIdFromToken = (token: string | null): string | null => {
+    const payload = parseJwt(token);
+    return payload?.userId || null;
+  };
+
+  const parseRoleFromToken = (token: string | null): string | null => {
+    const payload = parseJwt(token);
+    if (!payload) return null;
+    if (typeof payload.role === "string") return payload.role;
+    if (Array.isArray(payload.roles) && payload.roles.length > 0) return payload.roles[0];
+    if (payload.isAdmin) return "admin";
+    return null;
+  };
+
+  // Initialize state from sessionStorage
+  const [token, setToken] = useState<string | null>(sessionStorage.getItem("token"));
+  const [userId, setUserId] = useState<string | null>(parseUserIdFromToken(token));
+  const [role, setRole] = useState<string | null>(parseRoleFromToken(token));
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!token);
+
+  // Persist token & derived values to sessionStorage
   useEffect(() => {
     if (token) {
       sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userId", userId || "");
+      if (role) sessionStorage.setItem("role", role);
       setIsLoggedIn(true);
     } else {
-      sessionStorage.removeItem("token");
+      sessionStorage.clear();
       setIsLoggedIn(false);
     }
-  }, [token]);
+  }, [token, userId, role]);
 
-  // Keep role in sessionStorage when it changes
-  useEffect(() => {
-    if (role) {
-      sessionStorage.setItem('role', role);
-    } else {
-      sessionStorage.removeItem('role');
-    }
-  }, [role]);
-
-  // Helper: try to parse a role from a JWT token payload (if JWT used)
-  const parseRoleFromToken = (t: string | null): string | null => {
-    if (!t) return null;
-    try {
-      const parts = t.split('.');
-      if (parts.length < 2) return null;
-      const payloadJson = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
-      const payload = JSON.parse(payloadJson);
-      // common claim names: role, roles, isAdmin
-      if (typeof payload.role === 'string') return payload.role;
-      if (Array.isArray(payload.roles) && payload.roles.length > 0) return payload.roles[0];
-      if (payload.isAdmin) return 'admin';
-      return null;
-    } catch (err) {
-      return null;
-    }
-  };
-
+  // LOGIN
   const login = (newToken: string) => {
     setToken(newToken);
-    // parse role from token if available
-    const parsed = parseRoleFromToken(newToken);
-    setRole(parsed);
-    sessionStorage.setItem("token", newToken);
-    if (parsed) sessionStorage.setItem('role', parsed);
+    setUserId(parseUserIdFromToken(newToken));
+    setRole(parseRoleFromToken(newToken));
   };
 
+  // LOGOUT
   const logout = () => {
     setToken(null);
-    sessionStorage.removeItem("token");
     setRole(null);
-    sessionStorage.removeItem('role');
+    setUserId(null);
+    sessionStorage.clear();
   };
 
   return (
-    <AuthContext.Provider value={{ token, role, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ token, role, userId, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
     throw new Error("useAuth must be used inside an AuthProvider");
   }
-  return context;
+  return ctx;
 };
