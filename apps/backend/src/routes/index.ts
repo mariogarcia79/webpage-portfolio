@@ -11,6 +11,6 @@ router.use( "/auth",  authRoutes);
 router.use( "/posts", postsRoutes);
 router.use( "/users", userRoutes);
 
-router.post("/admin", authenticate, checkRole("admin"), adminRoutes);
+router.use("/admin", authenticate, checkRole("admin"), adminRoutes);
 
 export default router;

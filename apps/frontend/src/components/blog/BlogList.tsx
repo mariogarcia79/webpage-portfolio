@@ -8,7 +8,7 @@ function BlogList() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, role } = useAuth();
 
   useEffect(() => {
     PostAPI.getAllPosts()
@@ -26,7 +26,7 @@ function BlogList() {
     <div className="page-container list">
       <div className="header">
         <h1 className="title large left">Blog</h1>
-        {isLoggedIn && (
+        {isLoggedIn && role === 'admin' && (
           <Link to="/blog/new" className="button compact">
             New post
           </Link>

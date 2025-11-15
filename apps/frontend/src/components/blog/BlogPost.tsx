@@ -8,7 +8,7 @@ import MarkdownRenderer from './MarkdownRenderer';
 function BlogPost() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, role } = useAuth();
 
   useEffect(() => {
     if (!id) return;
@@ -30,7 +30,7 @@ function BlogPost() {
     <div className="page-container">
       <div className="header post">
         <Link to="/blog" className="link">Back</Link>
-        {isLoggedIn && (
+        {isLoggedIn && role === 'admin' && (
           <Link to={`/blog/edit/${id}`} className="button compact">
             Edit Post
           </Link>

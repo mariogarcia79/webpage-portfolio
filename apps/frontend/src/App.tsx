@@ -5,6 +5,7 @@ import LogIn    from './components/auth/LogIn';
 import BlogList from './components/blog/BlogList';
 import BlogPost from './components/blog/BlogPost';
 import BlogEditor from './components/blog/BlogEditor';
+import { ProtectedRoute } from './components/page/ProtectedRoute';
 
 function App() {
   return (
@@ -19,8 +20,22 @@ function App() {
           <Route path="/login"    element={<LogIn   />} />
           <Route path="/blog/:id" element={<BlogPost/>} />
           <Route path="/blog"     element={<BlogList/>} />
-          <Route path="/blog/new" element={<BlogEditor />} />
-          <Route path="/blog/edit/:id" element={<BlogEditor />} />
+          <Route
+            path="/blog/new"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <BlogEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blog/edit/:id"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <BlogEditor />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/"
             element={

@@ -3,9 +3,19 @@ import { useAuth } from "../../context/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  // optional role required to access the route (e.g. 'admin')
+  requiredRole?: string;
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isLoggedIn } = useAuth();
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
+export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { isLoggedIn, role } = useAuth();
+
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+
+  if (requiredRole && role !== requiredRole) {
+    // logged in but insufficient role
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
 };
