@@ -6,7 +6,12 @@ class PostAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/posts`);
       if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to fetch posts: ${errText}`);
       }
       return await response.json();
     } catch (error) {
@@ -19,7 +24,12 @@ class PostAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/posts/${id}`);
       if (!response.ok) {
-        throw new Error(`Failed to fetch post: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to fetch post: ${errText}`);
       }
       return await response.json();
     } catch (error) {
@@ -39,7 +49,12 @@ class PostAPI {
         body: JSON.stringify({ title, summary, content }),
       });
       if (!response.ok) {
-        throw new Error(`Failed to create post: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to create post: ${errText}`);
       }
       return await response.json();
     } catch (error) {
@@ -59,7 +74,12 @@ class PostAPI {
         body: JSON.stringify(partial),
       });
       if (!response.ok) {
-        throw new Error(`Failed to update post: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to update post: ${errText}`);
       }
       return await response.json();
     } catch (error) {
@@ -77,7 +97,12 @@ class PostAPI {
         },
       });
       if (!response.ok) {
-        throw new Error(`Failed to delete post: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to delete post: ${errText}`);
       }
     } catch (error) {
       console.error(`Error deleting post ${id}:`, error);

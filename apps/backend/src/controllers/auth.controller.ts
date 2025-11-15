@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import AuthService from "../services/auth.service";
 import UserService from "../services/users.service";
 import { isValidEmail, sanitizeText } from '../utils/validation';
+import { MIN_PASSWORD_LENGTH } from '../config/validation';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
@@ -20,8 +21,8 @@ class AuthController {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
-    if (typeof password !== 'string' || password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({ error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters` });
     }
 
     const cleanName = sanitizeText(name);

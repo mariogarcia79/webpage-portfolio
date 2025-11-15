@@ -9,7 +9,12 @@ class AuthAPI {
         body: JSON.stringify({ name, email, password }),
       });
       if (!response.ok) {
-        throw new Error(`Failed to signup: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to signup: ${errText}`);
       }
       return await response.json();
     } catch (error) {
@@ -26,7 +31,12 @@ class AuthAPI {
         body: JSON.stringify({ name, password }),
       });
       if (!response.ok) {
-        throw new Error(`Failed to login: ${response.statusText}`);
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to login: ${errText}`);
       }
       return await response.json();
     } catch (error) {

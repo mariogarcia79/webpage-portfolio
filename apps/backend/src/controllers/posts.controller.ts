@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import PostService from "../services/posts.service";
 import { sanitizeText, isObjectId } from '../utils/validation';
+import { MAX_TITLE_LENGTH, MAX_SUMMARY_LENGTH, MAX_CONTENT_LENGTH } from '../config/validation';
 
 class PostController {
 
@@ -51,9 +52,9 @@ class PostController {
       return res.status(400).json({ error: "Title, summary, and content are required" });
     }
 
-    if (typeof title !== 'string' || title.length > 300) return res.status(400).json({ error: 'Invalid title' });
-    if (typeof summary !== 'string' || summary.length > 1000) return res.status(400).json({ error: 'Invalid summary' });
-    if (typeof content !== 'string' || content.length > 20000) return res.status(400).json({ error: 'Invalid content' });
+  if (typeof title !== 'string' || title.length > MAX_TITLE_LENGTH) return res.status(400).json({ error: 'Invalid title' });
+  if (typeof summary !== 'string' || summary.length > MAX_SUMMARY_LENGTH) return res.status(400).json({ error: 'Invalid summary' });
+  if (typeof content !== 'string' || content.length > MAX_CONTENT_LENGTH) return res.status(400).json({ error: 'Invalid content' });
 
     const cleanTitle = sanitizeText(title);
     const cleanSummary = sanitizeText(summary);
@@ -81,10 +82,10 @@ class PostController {
       if (!isObjectId(id)) return res.status(400).json({ error: 'Invalid post id' });
 
       // sanitize allowed fields
-      const body: any = {};
-      if (req.body.title) body.title = sanitizeText(req.body.title);
-      if (req.body.summary) body.summary = sanitizeText(req.body.summary);
-      if (req.body.content) body.content = sanitizeText(req.body.content);
+  const body: any = {};
+  if (req.body.title) body.title = sanitizeText(req.body.title);
+  if (req.body.summary) body.summary = sanitizeText(req.body.summary);
+  if (req.body.content) body.content = sanitizeText(req.body.content);
 
       const updatedPost = await PostService.patchPostById(id, body); // Usar el servicio para actualizar el post
       if (!updatedPost) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PostAPI from '../../api/posts.api';
 import { useAuth } from '../../context/AuthContext';
+import { validatePost } from '../../utils/validation';
 
 function BlogEditor() {
   const navigate = useNavigate();
@@ -39,18 +40,24 @@ function BlogEditor() {
       setError('You must be logged in');
       return;
     }
+    const clientError = validatePost(title, summary, content);
+    if (clientError) {
+      setError(clientError);
+      return;
+    }
 
     try {
       setLoading(true);
       setError('');
       if (isEditing && id) {
-        await PostAPI.updatePost(id, { title, summary, content }, token);
+        await PostAPI.updatePost(id, { title: title.trim(), summary: summary.trim(), content }, token);
       } else {
-        await PostAPI.createPost(title, summary, content, token);
+        await PostAPI.createPost(title.trim(), summary.trim(), content, token);
       }
       navigate('/blog');
-    } catch (err) {
-      setError(`Failed to ${isEditing ? 'update' : 'create'} post. Please try again.`);
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || `Failed to ${isEditing ? 'update' : 'create'} post. Please try again.`;
+      setError(String(msg));
       console.error('Error:', err);
     } finally {
       setLoading(false);

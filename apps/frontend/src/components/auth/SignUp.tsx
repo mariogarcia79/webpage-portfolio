@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
+import { validateSignup } from '../../utils/validation';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -11,14 +12,22 @@ function SignUp() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignup = async (): Promise<void> => {
+    const clientError = validateSignup(name, email, password);
+    if (clientError) {
+      setError(clientError);
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
-      const response = await AuthAPI.signUp(name, email, password);
+      const response = await AuthAPI.signUp(name.trim(), email.trim(), password);
       console.log('Signup successful:', response);
       navigate('/login');
-    } catch (err) {
-      setError('Signup failed. Please try again.');
+    } catch (err: any) {
+      // show server error message if present
+      const msg = err?.response?.data?.message || err?.message || 'Signup failed. Please try again.';
+      setError(String(msg));
       console.error('Signup error:', err);
     } finally {
       setLoading(false);

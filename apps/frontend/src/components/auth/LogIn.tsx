@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, Link } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
+import { validateLogin } from '../../utils/validation';
 
 function Login() {
   const { login } = useAuth();
@@ -12,14 +13,21 @@ function Login() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogin = async (): Promise<void> => {
+    const clientError = validateLogin(name, password);
+    if (clientError) {
+      setError(clientError);
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
-      const response = await AuthAPI.logIn(name, password);
+      const response = await AuthAPI.logIn(name.trim(), password);
       login(response.token);
       navigate('/blog');
-    } catch (err) {
-      setError('Login failed. Please check your credentials.');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Login failed. Please check your credentials.';
+      setError(String(msg));
     } finally {
       setLoading(false);
     }

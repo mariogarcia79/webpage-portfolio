@@ -28,7 +28,7 @@ function BlogPost() {
 
   return (
     <div className="page-container">
-      <div className="header post">
+      <div className="header">
         <Link to="/blog" className="link">Back</Link>
         {isLoggedIn && role === 'admin' && (
           <Link to={`/blog/edit/${id}`} className="button compact">

@@ -23,14 +23,17 @@ function BlogList() {
   }, []);
 
   return (
-    <div className="page-container list">
+    <div className="page-container">
       <div className="header">
-        <h1 className="title large left">Blog</h1>
+        <Link to="/blog" className="link">Back</Link>
         {isLoggedIn && role === 'admin' && (
           <Link to="/blog/new" className="button compact">
             New post
           </Link>
         )}
+      </div>
+      <div className="post-content">
+        <h1 className="title large left">Blog</h1>
       </div>
       {loading ? (
         <p>Loading posts...</p>

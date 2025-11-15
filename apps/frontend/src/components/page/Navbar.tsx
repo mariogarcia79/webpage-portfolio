@@ -1,11 +1,31 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect, useRef, useState } from 'react';
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef<number>(0);
+
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    const onScroll = () => {
+      const current = window.scrollY;
+      // if scrolling down and scrolled more than 80px hide
+      if (current > lastY.current && current > 80) {
+        setHidden(true);
+      } else if (current < lastY.current) {
+        // scrolling up -> show
+        setHidden(false);
+      }
+      lastY.current = current;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${hidden ? 'hidden' : ''}`}>
       <NavLink 
         to="/" 
         className={({ isActive }) => isActive ? "active" : undefined}
