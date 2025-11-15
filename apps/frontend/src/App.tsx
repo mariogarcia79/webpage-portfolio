@@ -1,11 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./components/page/Navbar";
+import Home from "./components/page/Home";
 import SignUp   from './components/auth/SignUp';
 import LogIn    from './components/auth/LogIn';
 import BlogList from './components/blog/BlogList';
 import BlogPost from './components/blog/BlogPost';
 import BlogEditor from './components/blog/BlogEditor';
 import { ProtectedRoute } from './components/page/ProtectedRoute';
+import Footer from './components/page/Footer';
 
 function App() {
   return (
@@ -38,15 +40,10 @@ function App() {
           />
           <Route
             path="/"
-            element={
-              <div>
-                <h1>Welcome</h1>
-                <p>This is my blog.</p>
-                <Link to="/blog">Go to Blog</Link>
-              </div>
-            }
-          />*/
+            element={<Home />}
+          />
         </Routes>
+        <Footer />
       </main>
     </Router>
   );
