@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.97",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb-memory-server": "^10.3.0",
+    "multer": "^2.0.2",
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.30.0",
+    "react-markdown": "^10.1.0",
+    "rehype-prism-plus": "^2.0.1",
+    "rehype-sanitize": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/multer": "^1.4.7"
+  }
+}

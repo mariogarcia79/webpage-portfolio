@@ -1,0 +1,161 @@
+import bcrypt from "bcryptjs";
+import { FilterQuery, SortOrder } from "mongoose";
+import UserModel, { IUserDocument } from "../models/User";
+import { IUser } from "../types/user";
+
+import {
+  isObjectId,
+  sanitizeText,
+  sanitizeMongoInput,
+  escapeRegex,
+  isValidEmail
+} from "../utils/validation";
+
+class UserService {
+  
+  private static buildFilter(filter?: Partial<IUser>): FilterQuery<IUser> {
+    const mongoFilter: FilterQuery<IUser> = {};
+    if (!filter) return mongoFilter;
+    
+    const allowedFields: (keyof IUser)[] = ["name", "email", "role", "active"];
+    
+    for (const key of allowedFields) {
+      const value = filter[key];
+      if (value == null) continue;
+      
+      // Boolean fields
+      if (typeof value === "boolean") {
+        mongoFilter[key] = value;
+        continue;
+      }
+      
+      // String fields
+      if (typeof value === "string") {
+        const safeStr = sanitizeMongoInput(sanitizeText(value));
+        
+        // Email: validate format
+        if (key === "email" && !isValidEmail(safeStr)) continue;
+        
+        mongoFilter[key] = new RegExp(escapeRegex(safeStr), "i");
+        continue;
+      }
+      
+      // Direct RegExp
+      if (value instanceof RegExp) {
+        mongoFilter[key] = value;
+      }
+    }
+    
+    return mongoFilter;
+  }
+  
+  static async getAllUsers({
+    sorted = true,
+    filter
+  }: {
+    sorted?: boolean;
+    filter?: Partial<IUser>;
+  }): Promise<IUserDocument[]> {
+    const mongoFilter = this.buildFilter(filter);
+    
+    // Default: only active users
+    if (mongoFilter.active == null) mongoFilter.active = true;
+    
+    const sortOrder: { [key: string]: SortOrder } = {
+      name: sorted ? "asc" : "desc"
+    };
+    
+    return UserModel.find(mongoFilter).sort(sortOrder);
+  }
+  
+  static async getUserById(id: string): Promise<IUserDocument | null> {
+    if (!isObjectId(id)) return null;
+    
+    try {
+      return await UserModel.findById(id);
+    } catch (err) {
+      console.error("Error: getUserById:", err);
+      return null;
+    }
+  }
+  
+  static async getUserByName(name: string): Promise<IUserDocument | null> {
+    const safeName = sanitizeMongoInput(sanitizeText(name));
+    try {
+      return await UserModel.findOne({ name: new RegExp(`^${escapeRegex(safeName)}$`, "i") });
+    } catch (err) {
+      console.error("Error: getUserByName:", err);
+      return null;
+    }
+  }
+  
+  static async patchUserById(id: string, partial: Partial<IUser>): Promise<IUserDocument | null> {
+    if (!isObjectId(id)) return null;
+    
+    const allowedFields: (keyof IUser)[] = ["name", "email", "hash"];
+    const updateData: Partial<Record<keyof IUser, any>> = {};
+    
+    for (const key of allowedFields) {
+      const value = partial[key];
+      if (value === undefined) continue;
+      
+      if (typeof value === "string") {
+        if (key === "email" && !isValidEmail(value)) continue;
+        updateData[key] = sanitizeMongoInput(sanitizeText(value));
+      } else {
+        updateData[key] = value;
+      }
+    }
+    
+    try {
+      return await UserModel.findByIdAndUpdate(id, updateData, { new: true });
+    } catch (err) {
+      console.error("Error: patchUserById:", err);
+      return null;
+    }
+  }
+  
+  static async updateUserPassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<boolean> {
+    if (!isObjectId(id)) return false;
+    
+    try {
+      const user = await UserModel.findById(id);
+      if (!user) return false;
+      
+      // Check if current password matches
+      const isMatch = await bcrypt.compare(currentPassword, user.hash);
+      if (!isMatch) return false;
+      
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      
+      // Update user hash
+      user.hash = hashedPassword;
+      await user.save();
+      
+      return true;
+    } catch (err) {
+      console.error("Error: updateUserPassword:", err);
+      return false;
+    }
+  }
+  
+  static async deactivateUserById(id: string): Promise<boolean> {
+    if (!isObjectId(id)) return false;
+    
+    try {
+      const result = await UserModel.updateOne({ _id: id }, { active: false });
+      return result.modifiedCount > 0;
+    } catch (err) {
+      console.error("Error: deactivateUserById:", err);
+      return false;
+    }
+  }
+}
+
+export default UserService;
