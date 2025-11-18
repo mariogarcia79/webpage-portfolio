@@ -810,3 +810,14 @@ html, body {
     display: none;
   }
 }
+
+.char-counter {
+  text-align: right;
+  font-size: 0.85rem;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  color: #666;
+}
+.char-counter.exceeded {
+  color: var(--color-accent-warning);
+}

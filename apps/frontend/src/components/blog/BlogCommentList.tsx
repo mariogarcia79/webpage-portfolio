@@ -12,7 +12,11 @@ function BlogCommentList({ postId }: Props) {
   const { isLoggedIn, token } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const COMMENT_MAX = 2000;
   const [content, setContent] = useState("");
+  const [commentCount, setCommentCount] = useState(0);
+
   const [posting, setPosting] = useState(false);
 
   useEffect(() => {
@@ -32,6 +36,7 @@ function BlogCommentList({ postId }: Props) {
 
       setComments((prev) => [newComment, ...prev]);
       setContent("");
+      setCommentCount(0);
     } catch (err) {
       alert("Failed to post comment");
     }
@@ -39,18 +44,29 @@ function BlogCommentList({ postId }: Props) {
   };
 
   return (
-    <div className="page-content" style={{maxWidth: "900px", width: "100%"}}>
-      <h1 className="title large left" style={{marginBottom: "1rem"}}># Comments</h1>
+    <div className="page-content" style={{ maxWidth: "900px", width: "100%" }}>
+      <h1 className="title large left" style={{ marginBottom: "1rem" }}># Comments</h1>
 
       {isLoggedIn ? (
         <form onSubmit={handleSubmit} className="page-body">
           <textarea
             placeholder="Write a comment..."
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            maxLength={COMMENT_MAX}
+            onChange={(e) => {
+              const value = e.target.value;
+              setContent(value);
+              setCommentCount(value.length);
+            }}
             rows={4}
             className="textarea comment"
           />
+
+          {/* CHARACTER COUNTER */}
+          <div className="char-counter">
+            {commentCount} / {COMMENT_MAX}
+          </div>
+
           <button className="button" disabled={posting || !content.trim()}>
             {posting ? "Posting..." : "Add Comment"}
           </button>
@@ -62,9 +78,9 @@ function BlogCommentList({ postId }: Props) {
       {loading ? (
         <p>Loading comments...</p>
       ) : comments.length === 0 ? (
-        <p style={{marginTop: "1rem"}} className="error">No comments yet</p>
+        <p style={{ marginTop: "1rem" }} className="error">No comments yet</p>
       ) : (
-        <div className="comments-list" style={{marginBottom: "5rem"}}>
+        <div className="comments-list" style={{ marginBottom: "5rem" }}>
           {comments.map((c) => (
             <div
               key={c._id}

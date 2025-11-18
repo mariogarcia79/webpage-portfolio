@@ -11,9 +11,19 @@ function BlogEditor() {
   const { id } = useParams<{ id: string }>();
   const { token, isLoggedIn } = useAuth();
 
+  const TITLE_MAX = 300;
+  const SUMMARY_MAX = 1000;
+  const CONTENT_MAX = 20000;
+
   const [title, setTitle] = useState('');
+  const [titleCount, setTitleCount] = useState(0);
+
   const [summary, setSummary] = useState('');
+  const [summaryCount, setSummaryCount] = useState(0);
+
   const [content, setContent] = useState('');
+  const [contentCount, setContentCount] = useState(0);
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -23,24 +33,32 @@ function BlogEditor() {
   const isEditing = !!id;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Redirect if not logged in
   useEffect(() => {
     if (!isLoggedIn) navigate('/login');
   }, [isLoggedIn, navigate]);
 
+  // Load post if editing
   useEffect(() => {
     if (id && token) {
       setLoading(true);
       PostAPI.getPostById(id)
         .then(post => {
           setTitle(post.title);
+          setTitleCount(post.title.length);
+
           setSummary(post.summary);
+          setSummaryCount(post.summary.length);
+
           setContent(post.content);
+          setContentCount(post.content.length);
         })
         .catch(() => setError('Failed to load post'))
         .finally(() => setLoading(false));
     }
   }, [id, token]);
 
+  // Uploads
   const handleFileUpload = async (file: File) => {
     try {
       await UploadAPI.uploadFile(file, token || "");
@@ -58,6 +76,7 @@ function BlogEditor() {
     files.forEach(file => handleFileUpload(file));
   };
 
+  // Submit
   const handleSubmit = async () => {
     if (!token) return setError('You must be logged in');
 
@@ -86,37 +105,67 @@ function BlogEditor() {
   return (
     <div className="editor-wrapper">
 
-      {/* LEFT COLUMN: EDITOR */}
+      {/* LEFT COLUMN */}
       <div className="editor-main">
-        <h1 style={{ marginBottom: "1rem" }} className="title">{isEditing ? 'Edit Post' : 'Create New Post'}</h1>
+        <h1 style={{ marginBottom: "1rem" }} className="title">
+          {isEditing ? 'Edit Post' : 'Create New Post'}
+        </h1>
 
         {error && <div className="error block">{error}</div>}
 
+        {/* TITLE + COUNTER */}
         <input
           type="text"
           placeholder="Title"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          maxLength={TITLE_MAX}
+          onChange={e => {
+            const value = e.target.value;
+            setTitle(value);
+            setTitleCount(value.length);
+          }}
           className="input wide"
           disabled={loading}
         />
+        <div className="char-counter">
+          {titleCount} / {TITLE_MAX}
+        </div>
 
+        {/* SUMMARY + COUNTER */}
         <textarea
           placeholder="Summary"
           value={summary}
-          onChange={e => setSummary(e.target.value)}
+          maxLength={SUMMARY_MAX}
+          onChange={e => {
+            const value = e.target.value;
+            setSummary(value);
+            setSummaryCount(value.length);
+          }}
           className="textarea post-summary"
           disabled={loading}
         />
+        <div className="char-counter">
+          {summaryCount} / {SUMMARY_MAX}
+        </div>
 
+        {/* CONTENT + COUNTER */}
         <textarea
           placeholder="Content"
           value={content}
-          onChange={e => setContent(e.target.value)}
+          maxLength={CONTENT_MAX}
+          onChange={e => {
+            const value = e.target.value;
+            setContent(value);
+            setContentCount(value.length);
+          }}
           className="textarea post-content"
           disabled={loading}
         />
+        <div className="char-counter">
+          {contentCount} / {CONTENT_MAX}
+        </div>
 
+        {/* FILE UPLOAD */}
         <div
           className={`dropzone ${isDragging ? 'dragging' : ''}`}
           onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
@@ -149,7 +198,7 @@ function BlogEditor() {
         </button>
       </div>
 
-      {/* RIGHT COLUMN: FILE LIST */}
+      {/* RIGHT SIDEBAR */}
       <div className="editor-sidebar">
         <h3>Uploaded URLs</h3>
         {uploadedFiles.length === 0 && (

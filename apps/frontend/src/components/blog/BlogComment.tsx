@@ -1,4 +1,3 @@
-import MarkdownRenderer from "./MarkdownRenderer";
 import { Comment } from "../../types/comment";
 
 interface BlogCommentProps {
@@ -19,7 +18,9 @@ function BlogComment({ comment }: BlogCommentProps) {
       </div>
 
       <div className="comment-body">
-        <MarkdownRenderer content={comment.content} />
+        <p style={{ whiteSpace: "pre-wrap" }}>
+          {comment.content}
+        </p>
       </div>
     </div>
   );
