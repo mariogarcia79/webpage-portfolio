@@ -749,3 +749,61 @@ html, body {
 .footer-links .link:hover {
   text-decoration: underline;
 }
+
+
+
+/* --- BlogEditor Two-Column Layout --- */
+
+.editor-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  justify-content: center;
+}
+
+.editor-main {
+  width: 100%;
+  max-width: 900px;
+}
+
+.editor-sidebar {
+  width: 500px;
+  min-width: 200px;
+  background: var(--color-dark-1);
+  border: 1px solid var(--color-subtle-general);
+  margin-top: 51px;
+  padding: 1rem;
+  height: flex;
+  font-size: 0.85rem;
+}
+
+.editor-sidebar h3 {
+  color: var(--color-accent-general);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.file-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.file-list code {
+  word-break: break-all;
+}
+
+.sidebar-empty {
+  color: var(--color-text-1);
+  font-style: italic;
+}
+
+@media (max-width: 1100px) {
+  .editor-sidebar {
+    display: none;
+  }
+}
