@@ -36,7 +36,7 @@ function SignUp() {
   return (
     <div className="page-container centered">
       <div className="container">
-        <h2 className="title">Sign Up</h2>
+        <h1 className="title">Sign Up</h1>
         {error && (
           <div className="error">
             {error}

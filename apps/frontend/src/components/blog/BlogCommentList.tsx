@@ -40,7 +40,7 @@ function BlogCommentList({ postId }: Props) {
 
   return (
     <div className="page-content" style={{maxWidth: "900px", width: "100%"}}>
-      <h2 className="title large left" style={{marginBottom: "1rem"}}># Comments</h2>
+      <h1 className="title large left" style={{marginBottom: "1rem"}}># Comments</h1>
 
       {isLoggedIn ? (
         <form onSubmit={handleSubmit} className="page-body">

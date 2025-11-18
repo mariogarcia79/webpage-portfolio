@@ -88,7 +88,7 @@ function BlogEditor() {
 
       {/* LEFT COLUMN: EDITOR */}
       <div className="editor-main">
-        <h2 style={{ marginBottom: "1rem" }} className="title">{isEditing ? 'Edit Post' : 'Create New Post'}</h2>
+        <h1 style={{ marginBottom: "1rem" }} className="title">{isEditing ? 'Edit Post' : 'Create New Post'}</h1>
 
         {error && <div className="error block">{error}</div>}
 

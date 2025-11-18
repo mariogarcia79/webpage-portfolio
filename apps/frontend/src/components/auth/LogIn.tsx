@@ -43,7 +43,7 @@ function Login() {
   return (
     <div className="page-container centered">
       <div className="container">
-        <h2 className="title">Login</h2>
+        <h1 className="title">Login</h1>
 
         {error && ( 
           <div className="error">

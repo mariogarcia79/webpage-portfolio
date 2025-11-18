@@ -141,9 +141,9 @@ const UserDashboard = () => {
 
       <div className="post-content post-body" style={{ marginTop: "2rem" }}>
         <div className="post-body">
-          <h2 className="title left" style={{ marginBottom: "1rem" }}>
+          <h1 className="title left" style={{ marginBottom: "1rem" }}>
             &gt; Account Settings
-          </h2>
+          </h1>
 
           <form className="form" onSubmit={handleProfileSave}>
             <label>
@@ -174,12 +174,12 @@ const UserDashboard = () => {
           </form>
           {profileMessage && <p className="success">{profileMessage}</p>}
 
-          <h2
+          <h1
             className="title left"
             style={{ marginTop: "2rem", marginBottom: "1rem" }}
           >
             &gt; Change Password
-          </h2>
+          </h1>
           <form className="form" onSubmit={handlePasswordChange}>
             <label>
               Current Password:
@@ -220,12 +220,12 @@ const UserDashboard = () => {
           </form>
           {passwordMessage && <p className="error">{passwordMessage}</p>}
 
-          <h2
+          <h1
             className="title left"
             style={{ marginTop: "2rem", marginBottom: "1rem" }}
           >
             &gt; Danger zone
-          </h2>
+          </h1>
           <div style={{ marginTop: "1rem" }}>
             <button className="button delete" onClick={handleDeleteUser}>
               Deactivate account
