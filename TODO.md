@@ -1,4 +1,4 @@
 # TODO LIST
-* admin should be able to get a list of users.
+* fix problems with soft deletion.
 * logs & settings.
 * cors and security.

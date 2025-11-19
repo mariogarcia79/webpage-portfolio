@@ -293,6 +293,7 @@ html, body {
   background-color: var(--color-accent-general);
   color: var(--color-dark-0);
   border: 1px solid transparent !important;
+  text-decoration: none;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -905,7 +906,6 @@ html, body {
   text-overflow: ellipsis;
   min-width: 0;
   color: inherit;
-  text-decoration: none;
 }
 
 /* Acciones */

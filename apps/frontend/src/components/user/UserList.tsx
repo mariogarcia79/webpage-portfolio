@@ -8,7 +8,7 @@ function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { token, role } = useAuth();
+  const { _id, token, role } = useAuth();
 
   
   useEffect(() => {
@@ -75,9 +75,15 @@ function UserList() {
                   Status: {u.active ? 'active' : 'inactive'}
                 </div>
                 <div className="user-actions">
+                  {_id === u._id ? (
+                    <button className="button delete compact" disabled onClick={() => handleDeleteUser(u._id)}>
+                      {u.active ? 'Deactivate' : 'Activate'}
+                    </button> 
+                  ) : (
                   <button className="button delete compact" onClick={() => handleDeleteUser(u._id)}>
                     {u.active ? 'Deactivate' : 'Activate'}
                   </button>
+                  )}
                 </div>
               </div>
               

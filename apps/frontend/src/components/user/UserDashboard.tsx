@@ -21,7 +21,7 @@ const UserDashboard = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
 
   const [profileMessage, setProfileMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
+  const [_, setPasswordMessage] = useState("");
   const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
