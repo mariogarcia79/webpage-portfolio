@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { User, UserUpdate } from "../../types/user";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import UsersAPI from "../../api/users.api";
 
 const UserDashboard = () => {
-  const { token, _id: contextUserId, logout } = useAuth();
+  const { token, _id: contextUserId, logout, role } = useAuth();
+  const { userId: routeUserId } = useParams();
   const navigate = useNavigate();
-  const _id = contextUserId;
+  const _id = routeUserId ?? contextUserId;
 
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,25 +25,24 @@ const UserDashboard = () => {
   const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
+    if (routeUserId && routeUserId !== contextUserId && role !== "admin") {
+      navigate("/dashboard");
+    }
+  }, [routeUserId, contextUserId, role, navigate]);
+
+  useEffect(() => {
     if (!_id || !token) {
       setLoading(false);
       return;
     }
 
-    const fetchUser = async () => {
-      try {
-        const user = await UsersAPI.getUserById(_id, token);
+    UsersAPI.getUserById(_id, token)
+      .then((user) => {
         setUserData(user);
         setName(user.name);
         setEmail(user.email);
-      } catch {
-        setProfileMessage("Failed to fetch user data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+      })
+      .finally(() => setLoading(false));
   }, [_id, token]);
 
   const handleProfileSave = async (e: React.FormEvent) => {
@@ -84,9 +84,7 @@ const UserDashboard = () => {
   const handleDeleteUser = async () => {
     if (!_id || !token) return;
 
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This cannot be undone."
-    );
+    const confirmed = window.confirm("Are you sure?");
     if (!confirmed) return;
 
     try {
@@ -98,12 +96,10 @@ const UserDashboard = () => {
     }
   };
 
-  if (!token || !_id) {
+  if (!token || !contextUserId) {
     return (
       <div className="page-container">
-        <p>
-          You must <Link to="/login">log in</Link> to view your dashboard.
-        </p>
+        <p>You must <Link to="/login" className="link">log in</Link>.</p>
       </div>
     );
   }
@@ -111,7 +107,7 @@ const UserDashboard = () => {
   if (loading) {
     return (
       <div className="page-container">
-        <p>Loading user data...</p>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -119,120 +115,80 @@ const UserDashboard = () => {
   if (!userData) {
     return (
       <div className="page-container">
-        <Link to="/" className="link">
-          $ cd ../
-        </Link>
+        <Link to="/" className="link">$ cd ../</Link>
         <p>User not found</p>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="header">
-        <Link to="/" className="link">
-          $ cd ../
-        </Link>
+    <div className="page-container" style={{ gap: "1.5rem" }}>
+      <div className="header" style={{ marginBottom: "1rem" }}>
+        <Link to="/" className="link">$ cd ../</Link>
       </div>
 
-      <div className="post-content">
-        <h1 className="title large left"># User Dashboard</h1>
-      </div>
+      <h1 className="title large left" style={{ maxWidth: "900px", width: "100%" }}>
+        # User Dashboard
+      </h1>
 
-      <div className="post-content post-body" style={{ marginTop: "2rem" }}>
-        <div className="post-body">
-          <h1 className="title left" style={{ marginBottom: "1rem" }}>
-            &gt; Account Settings
-          </h1>
-
-          <form className="form" onSubmit={handleProfileSave}>
-            <label>
-              Name:
-              <input
-                type="text"
-                className="input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Email:
-              <input
-                type="email"
-                className="input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
-
-            <button type="submit" className="button wide">
-              Save Profile
-            </button>
-          </form>
-          {profileMessage && <p className="success">{profileMessage}</p>}
-
-          <h1
-            className="title left"
-            style={{ marginTop: "2rem", marginBottom: "1rem" }}
-          >
-            &gt; Change Password
-          </h1>
-          <form className="form" onSubmit={handlePasswordChange}>
-            <label>
-              Current Password:
-              <input
-                type="password"
-                className="input"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              New Password:
-              <input
-                type="password"
-                className="input"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Confirm New Password:
-              <input
-                type="password"
-                className="input"
-                value={newPasswordConfirm}
-                onChange={(e) => setNewPasswordConfirm(e.target.value)}
-                required
-              />
-            </label>
-
-            <button type="submit" className="button wide">
-              Update Password
-            </button>
-          </form>
-          {passwordMessage && <p className="error">{passwordMessage}</p>}
-
-          <h1
-            className="title left"
-            style={{ marginTop: "2rem", marginBottom: "1rem" }}
-          >
-            &gt; Danger zone
-          </h1>
-          <div style={{ marginTop: "1rem" }}>
-            <button className="button delete" onClick={handleDeleteUser}>
-              Deactivate account
-            </button>
-            {deleteMessage && <p className="error">{deleteMessage}</p>}
-          </div>
+      <div className="user-list" style={{ maxWidth: "900px", marginTop: "1rem" }}>
+        <div className="user-row" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="user-name"><strong>Name:</strong> {userData.name}</div>
+          <div className="user-email"><strong>Email:</strong> {userData.email}</div>
+          <div className="user-role"><strong>Role:</strong> {userData.role}</div>
+          <div className="user-status"><strong>Status:</strong> {userData.active ? "active" : "inactive"}</div>
         </div>
+      </div>
+
+      <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
+        <h2 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Edit Profile</h2>
+
+        <form onSubmit={handleProfileSave} style={{ justifyContent: "right" }}>
+          <div className="user-list">
+            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+              <div className="user-name">Name</div>
+              <input type="text" className="input" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+              <div className="user-email">Email</div>
+              <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+          </div>
+          <button className="button compact" style={{ marginTop: "1rem" }}>Save</button>
+        </form>
+
+        {profileMessage && <p className="error">{profileMessage}</p>}
+      </div>
+
+      <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
+        <h2 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Change Password</h2>
+
+        <form onSubmit={handlePasswordChange} style={{ justifyContent: "right" }}>
+          <div className="user-list">
+            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+              <div className="user-password">Current Password</div>
+              <input type="password" className="input" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+            </div>
+            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+              <div className="user-password">New Password</div>
+              <input type="password" className="input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            </div>
+            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+              <div className="user-password">Confirm Password</div>
+              <input type="password" className="input" value={newPasswordConfirm} onChange={(e) => setNewPasswordConfirm(e.target.value)} />
+            </div>
+          </div>
+          <button className="button compact" style={{ marginTop: "1rem" }}>Update</button>
+        </form>
+
+        {profileMessage && <p className="error">{profileMessage}</p>}
+      </div>
+
+      <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
+        <h2 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h2>
+
+        <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>Deactivate account</button>
+        {deleteMessage && <p className="error">{deleteMessage}</p>}
       </div>
     </div>
   );

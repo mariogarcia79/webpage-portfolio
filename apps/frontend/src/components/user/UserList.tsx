@@ -34,14 +34,9 @@ function BlogList() {
       <div className="page-container">
         <div className="header">
           <Link to="/" className="link">$ cd ../</Link>
-          {isLoggedIn && role === 'admin' && (
-            <Link to="/blog/new" className="button compact">
-              New user
-            </Link>
-          )}
         </div>
         <div className="user-content">
-          <h1 className="title large left"># Blog</h1>
+          <h1 className="title large left"># Users</h1>
         </div>
         {loading ? (
           <p>Loading users...</p>
@@ -50,38 +45,23 @@ function BlogList() {
         ) : (
           <ul className="user-list">
             {users.map((u) => (
-              <div
+              <Link 
+                to={`/dashboard/${u._id}`}
                 key={u._id}
-                className="user-wrapper"
+                className="user-row"
               >
-                <li className="user-item row">
-                  <div className="col">
-                    <Link to={`/users/${u._id}`} className="user-name">
-                      ./{u.name}
-                    </Link>
-                  </div>
-                  
-                  <div className="col">
-                  <p className="user-email">{u.email}</p>
-                  </div>
-
-                  <div className="col">
-                  <p className="user-role">Role: {u.role}</p>
-                  </div>
-                  
-                  <div className="col">
-                  <p className="user-status">
-                    Status: {u.active ? 'Active' : 'Inactive'}
-                  </p>
-                  </div>
-
-                  <div className="col">
-                  <button className="deactivate-button">
+                <div className="user-name">{u.name}</div>
+                <div className="user-email">{u.email}</div>
+                <div className="user-role">Role: {u.role}</div>
+                <div className="user-status">
+                  Status: {u.active ? 'Active' : 'Inactive'}
+                </div>
+                <div className="user-actions">
+                  <button className="button delete compact">
                     {u.active ? 'Deactivate' : 'Activate'}
                   </button>
-                  </div>
-                </li>
-              </div>
+                </div>
+              </Link>
             ))}
           </ul>
         )}

@@ -63,6 +63,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/dashboard/:userId"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
 
         <Footer />
