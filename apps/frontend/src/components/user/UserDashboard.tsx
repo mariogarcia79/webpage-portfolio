@@ -141,7 +141,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
-        <h2 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Edit Profile</h2>
+        <h1 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Edit Profile</h1>
 
         <form onSubmit={handleProfileSave} style={{ justifyContent: "right" }}>
           <div className="user-list">
@@ -161,7 +161,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
-        <h2 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Change Password</h2>
+        <h1 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Change Password</h1>
 
         <form onSubmit={handlePasswordChange} style={{ justifyContent: "right" }}>
           <div className="user-list">
@@ -185,7 +185,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
-        <h2 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h2>
+        <h1 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h1>
 
         <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>Deactivate account</button>
         {deleteMessage && <p className="error">{deleteMessage}</p>}

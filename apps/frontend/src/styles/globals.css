@@ -237,7 +237,7 @@ html, body {
 }
 
 .textarea.post-content {
-  min-height: 50vh;
+  min-height: 30vh;
   resize: vertical;
 }
 
@@ -757,7 +757,7 @@ html, body {
   width: 100%;
   max-width: 1200px;
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 2rem;
   padding-left: 1rem;
   padding-right: 1rem;
