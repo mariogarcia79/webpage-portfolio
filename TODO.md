@@ -1,4 +1,5 @@
 # TODO LIST
-* fix problems with soft deletion.
+* make admins able to see soft deleted posts and users.
 * logs & settings.
 * cors and security.
+* deploy.

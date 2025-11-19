@@ -68,6 +68,12 @@ prism-nord.css
   border-radius: 4px;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html, body {
   width: 100%;
   min-height: 100%;
@@ -111,7 +117,7 @@ html, body {
    PAGE CONTAINERS
 ============================================ */
 .page-container {
-  width: 100vw;
+  width: 100%;
   /* account for fixed navbar height */
   padding-top: calc(0.5rem + 60px);
   overflow-y: auto;
@@ -502,7 +508,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 5rem;
+  padding: 0 2rem;
   border-bottom: 1px solid var(--color-text-0);
   font-family: 'Roboto Mono', monospace;
   position: fixed;
@@ -513,6 +519,12 @@ html, body {
   gap: 1.5rem;
   transition: transform 240ms ease-in-out, background-color 200ms;
   transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    justify-content: center;
+  }
 }
 
 .navbar.hidden {
@@ -547,6 +559,7 @@ html, body {
   color: var(--color-dark-0);
   border: 1px solid transparent;
   cursor: pointer;
+  text-wrap: nowrap;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -716,6 +729,7 @@ html, body {
 .footer {
   width: 100%;
   border-top: 1px solid;
+  border-radius: 0;
   text-align: center;
 }
 
@@ -864,7 +878,7 @@ html, body {
 /* Filas de usuario */
 .user-row {
   display: grid;
-  grid-template-columns: 1.5fr 3fr 2fr 2fr 4fr;
+  grid-template-columns: 1.5fr 3fr 2fr 6fr;
   padding: 0.8rem 1rem;
   background-color: var(--color-dark-0);
   font-size: 0.95rem;

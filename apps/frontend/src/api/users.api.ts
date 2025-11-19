@@ -61,7 +61,7 @@ export class UsersAPI {
     return res.json();
   }
 
-  static async deactivateUserById(_id: string, token: string): Promise<void> {
+  static async deleteUserById(_id: string, token: string): Promise<void> {
     const res = await fetch(`${API_BASE_URL}/users/${_id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },

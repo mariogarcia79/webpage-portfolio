@@ -17,7 +17,7 @@ class UserService {
     const mongoFilter: FilterQuery<IUser> = {};
     if (!filter) return mongoFilter;
     
-    const allowedFields: (keyof IUser)[] = ["name", "email", "role", "active"];
+    const allowedFields: (keyof IUser)[] = ["name", "email", "role"];
     
     for (const key of allowedFields) {
       const value = filter[key];
@@ -57,9 +57,6 @@ class UserService {
     filter?: Partial<IUser>;
   }): Promise<IUserDocument[]> {
     const mongoFilter = this.buildFilter(filter);
-    
-    // Default: only active users
-    if (mongoFilter.active == null) mongoFilter.active = true;
     
     const sortOrder: { [key: string]: SortOrder } = {
       name: sorted ? "asc" : "desc"
@@ -145,14 +142,14 @@ class UserService {
     }
   }
   
-  static async deactivateUserById(id: string): Promise<boolean> {
+  static async deleteUserById(id: string): Promise<boolean> {
     if (!isObjectId(id)) return false;
     
     try {
-      const result = await UserModel.updateOne({ _id: id }, { active: false });
-      return result.modifiedCount > 0;
+      const result = await UserModel.deleteOne({ _id: id });
+      return result.deletedCount === 1;
     } catch (err) {
-      console.error("Error: deactivateUserById:", err);
+      console.error("Error: deleteUserById:", err);
       return false;
     }
   }

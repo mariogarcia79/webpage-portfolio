@@ -6,7 +6,6 @@ export interface IUser {
   email: string;
   hash: string;
   role: UserRole;
-  active: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

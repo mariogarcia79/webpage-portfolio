@@ -61,8 +61,7 @@ class AuthService {
         name: safeName,
         email: safeEmail,
         hash: data.hash,
-        role: data.role,
-        active: data.active ?? true
+        role: data.role
       });
 
       return await newUser.save();

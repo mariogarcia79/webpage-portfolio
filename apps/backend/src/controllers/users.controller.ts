@@ -12,7 +12,7 @@ class UserController {
       const queryName = req.query.name as string | undefined;
       const queryRole = req.query.role as string | undefined;
       
-      const filter: FilterQuery<IUser> = { active: true };
+      const filter: FilterQuery<IUser> = { };
       
       if (queryName) {
         const safeName = sanitizeText(queryName);
@@ -95,18 +95,18 @@ class UserController {
     }
   }
   
-  static async deactivateUserById(req: Request, res: Response): Promise<Response> {
+  static async deleteUserById(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params.id;
-      if (!isObjectId(id)) return res.status(400).json({ error: 'Error: deactivateUserById: Invalid user ID' });
+      if (!isObjectId(id)) return res.status(400).json({ error: 'Error: deleteUserById: Invalid user ID' });
       
-      const isDeleted = await UserService.deactivateUserById(id);
-      if (!isDeleted) return res.status(404).json({ error: "Error: deactivateUserById: User not found" });
+      const isDeleted = await UserService.deleteUserById(id);
+      if (!isDeleted) return res.status(404).json({ error: "Error: deleteUserById: User not found" });
       
       return res.status(204).send();
     } catch (error: unknown) {
       console.error(error instanceof Error ? error : "Unknown error");
-      return res.status(500).json({ message: "Error: deactivateUserById:", error: (error as Error)?.message || "Error: deactivateUserById: Unknown error" });
+      return res.status(500).json({ message: "Error: deleteUserById:", error: (error as Error)?.message || "Error: deleteUserById: Unknown error" });
     }
   }
 }

@@ -36,10 +36,8 @@ function UserList() {
       if (!confirmed) return;
   
       try {
-        await UsersAPI.deactivateUserById(userId, token);
-        setUsers(prev => prev.map(u => 
-          u._id === userId ? { ...u, active: !u.active } : u
-        ));
+        await UsersAPI.deleteUserById(userId, token);
+        setUsers(prev => prev.filter(u => u._id !== userId));
       } catch {
         console.error("Failed to delete user");
       }
@@ -71,17 +69,14 @@ function UserList() {
                 <Link to={`/dashboard/${u._id}`} className="user-name">{u.name}</Link>
                 <div className="user-email">{u.email}</div>
                 <div className="user-role">Role: {u.role}</div>
-                <div className="user-status">
-                  Status: {u.active ? 'active' : 'inactive'}
-                </div>
                 <div className="user-actions">
                   {_id === u._id ? (
                     <button className="button delete compact" disabled onClick={() => handleDeleteUser(u._id)}>
-                      {u.active ? 'Deactivate' : 'Activate'}
+                      Delete
                     </button> 
                   ) : (
                   <button className="button delete compact" onClick={() => handleDeleteUser(u._id)}>
-                    {u.active ? 'Deactivate' : 'Activate'}
+                    Delete
                   </button>
                   )}
                 </div>

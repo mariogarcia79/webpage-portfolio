@@ -32,11 +32,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const user = await UserService.getUserById(decoded._id);
     if (!user) return res.status(401).json({ error: "Unauthorized: user not found" });
 
-    // Check if the user is active
-    if (!user.active) {
-      return res.status(403).json({ error: "Unauthorized: user is inactive" });
-    }
-
     req.user = {
       _id: user.id.toString(),
       role: user.role,

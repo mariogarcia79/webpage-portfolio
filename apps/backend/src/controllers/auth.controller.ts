@@ -109,10 +109,6 @@ class AuthController {
         return res.status(400).json({ error: "User not found" });
       }
       
-      if (!user.active) {
-        return res.status(403).json({ error: "User account is inactive" });
-      }
-      
       const isMatch = await bcrypt.compare(password, user.hash);
       if (!isMatch) {
         return res.status(400).json({ error: "Incorrect password" });

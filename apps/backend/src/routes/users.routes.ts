@@ -8,7 +8,7 @@ router.get(   "/",    authenticate, checkRole("admin"), UserController.getAllUse
 
 router.get(   "/:id", authenticate, validateUserId, UserController.getUserById);
 router.patch( "/:id", authenticate, validateUserId, UserController.patchUserById);
-router.delete("/:id", authenticate, validateUserId, UserController.deactivateUserById);
+router.delete("/:id", authenticate, validateUserId, UserController.deleteUserById);
 
 router.patch( "/pwd/:id", authenticate, validateUserId, UserController.updateUserPassword);
 

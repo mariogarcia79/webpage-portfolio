@@ -88,7 +88,7 @@ const UserDashboard = () => {
     if (!confirmed) return;
 
     try {
-      await UsersAPI.deactivateUserById(_id, token);
+      await UsersAPI.deleteUserById(_id, token);
       if (_id === contextUserId) {
         logout();
         navigate("/");
@@ -140,7 +140,6 @@ const UserDashboard = () => {
           <div className="user-name"><strong>Name:</strong> {userData.name}</div>
           <div className="user-email"><strong>Email:</strong> {userData.email}</div>
           <div className="user-role"><strong>Role:</strong> {userData.role}</div>
-          <div className="user-status"><strong>Status:</strong> {userData.active ? "active" : "inactive"}</div>
         </div>
       </div>
 
@@ -191,7 +190,7 @@ const UserDashboard = () => {
       <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
         <h1 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h1>
 
-        <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>Deactivate account</button>
+        <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>Delete account</button>
         {deleteMessage && <p className="error">{deleteMessage}</p>}
       </div>
     </div>
