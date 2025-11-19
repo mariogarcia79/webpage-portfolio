@@ -89,8 +89,12 @@ const UserDashboard = () => {
 
     try {
       await UsersAPI.deactivateUserById(_id, token);
-      logout();
-      navigate("/");
+      if (_id === contextUserId) {
+        logout();
+        navigate("/");
+      } else {
+        navigate("/users");
+      }
     } catch {
       setDeleteMessage("Failed to delete user");
     }
@@ -157,7 +161,7 @@ const UserDashboard = () => {
           <button className="button compact" style={{ marginTop: "1rem" }}>Save</button>
         </form>
 
-        {profileMessage && <p className="error">{profileMessage}</p>}
+        {profileMessage && <p className="error block">{profileMessage}</p>}
       </div>
 
       <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>

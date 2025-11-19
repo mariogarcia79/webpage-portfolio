@@ -78,7 +78,7 @@ function BlogCommentList({ postId }: Props) {
       {loading ? (
         <p>Loading comments...</p>
       ) : comments.length === 0 ? (
-        <p style={{ marginTop: "1rem" }} className="error">No comments yet</p>
+        <p style={{ marginTop: "1rem" }} className="error block">No comments yet</p>
       ) : (
         <div className="comments-list" style={{ marginBottom: "5rem" }}>
           {comments.map((c) => (

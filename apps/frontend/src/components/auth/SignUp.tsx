@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthAPI from '../../api/auth.api';
 import { validateSignup } from '../../utils/validation';
+import { useAuth } from '../../context/AuthContext';
 
 function SignUp() {
   const navigate = useNavigate();
+  const { role, token } = useAuth();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -21,13 +23,17 @@ function SignUp() {
     try {
       setLoading(true);
       setError('');
-      await AuthAPI.signUp(name.trim(), email.trim(), password);
-      navigate('/login');
+
+      if (role === "admin") {
+        await AuthAPI.signUpAdmin(name.trim(), email.trim(), password, role, token);
+      } else {
+        await AuthAPI.signUp(name.trim(), email.trim(), password);
+      }
+
+      navigate(role === "admin" ? '/users' : '/login');
     } catch (err: any) {
-      // show server error message if present
       const msg = err?.response?.data?.message || err?.message || 'Signup failed. Please try again.';
       setError(String(msg));
-      console.error('Signup error:', err);
     } finally {
       setLoading(false);
     }
@@ -36,16 +42,13 @@ function SignUp() {
   return (
     <div className="page-container centered">
       <div className="container">
-        <h1 className="title">Sign Up</h1>
-        {error && (
-          <div className="error">
-            {error}
-          </div>
-        )}
-        <form
-          className="form"
-          onSubmit={(e) => { e.preventDefault(); handleSignup(); }}
-        >
+        <h1 className="title" style={{ marginBottom: "1rem" }}>
+          {role === "admin" ? "Create Admin" : "Sign Up"}
+        </h1>
+
+        {error && <div className="error block">{error}</div>}
+
+        <form className="form" onSubmit={(e) => { e.preventDefault(); handleSignup(); }}>
           <input
             type="text"
             placeholder="Name"
@@ -71,12 +74,9 @@ function SignUp() {
             className="input"
             disabled={loading}
           />
-          <button
-            type="submit"
-            className="button"
-            disabled={loading}
-          >
-            {loading ? 'Creating account...' : 'Sign Up'}
+
+          <button type="submit" className="button" disabled={loading}>
+            {loading ? 'Creating...' : role === "admin" ? "Create Admin" : "Sign Up"}
           </button>
         </form>
       </div>

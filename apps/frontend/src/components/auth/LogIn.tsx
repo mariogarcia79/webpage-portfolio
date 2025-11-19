@@ -43,10 +43,10 @@ function Login() {
   return (
     <div className="page-container centered">
       <div className="container">
-        <h1 className="title">Login</h1>
+        <h1 className="title center left" style={{ marginBottom: "1rem" }}>Login</h1>
 
         {error && ( 
-          <div className="error">
+          <div className="error block">
             {error}
           </div>
         )}

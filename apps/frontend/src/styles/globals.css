@@ -381,6 +381,7 @@ html, body {
   font-weight: bold;
   color: var(--color-text-0);
   text-decoration: none;
+  text-wrap: nowrap;
 }
 
 .post-content {
@@ -533,6 +534,7 @@ html, body {
   color: var(--color-accent-general);
   font-weight: bold;
   border-bottom: 2px solid var(--color-accent-general);
+  border-radius: 0px;
   padding-bottom: 2px;
 }
 
@@ -896,17 +898,14 @@ html, body {
 .user-name,
 .user-email,
 .user-role,
-.user-status {
+.user-status,
+.user-password {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
   color: inherit;
   text-decoration: none;
-}
-
-.user-name {
-  font-weight: bold;
 }
 
 /* Acciones */

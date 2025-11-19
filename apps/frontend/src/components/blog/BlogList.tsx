@@ -39,7 +39,7 @@ function BlogList() {
         {loading ? (
           <p>Loading posts...</p>
         ) : error ? (
-          <p className="error">{error}</p>
+          <p className="error block">{error}</p>
         ) : (
           <ul className="post-list">
             {posts.map((p) => (
@@ -52,7 +52,7 @@ function BlogList() {
                     <Link to={`/blog/${p._id}`} className="post-title">
                       ./{p.title}
                     </Link>
-                    <div className="post-date">{new Date(p.createdAt).toLocaleString()}</div>
+                    <div className="post-date">{new Date(p.createdAt).toLocaleString().split(',')[0]}</div>
                   </div>
                   <div className="post-summary margin">{p.summary}</div>
                 </li>
