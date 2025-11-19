@@ -7,6 +7,7 @@ import BlogList from './components/blog/BlogList';
 import BlogPost from './components/blog/BlogPost';
 import BlogEditor from './components/blog/BlogEditor';
 import UserDashboard from './components/user/UserDashboard';
+import UserList from './components/user/UserList';
 import { ProtectedRoute } from './components/page/ProtectedRoute';
 import Footer from './components/page/Footer';
 
@@ -40,6 +41,15 @@ function App() {
             element={
               <ProtectedRoute requiredRole="admin">
                 <BlogEditor />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <UserList />
               </ProtectedRoute>
             }
           />

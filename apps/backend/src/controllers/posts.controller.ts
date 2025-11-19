@@ -67,6 +67,8 @@ class PostController {
     if (!isObjectId(id)) return res.status(400).json({ error: "Invalid post ID" });
 
     const body: Partial<IPost> = {};
+    if (req.body.title) body.title = sanitizeText(req.body.title);
+    if (req.body.summary) body.summary = sanitizeText(req.body.summary);
     if (req.body.content) body.content = sanitizeMarkdown(req.body.content);
 
     try {

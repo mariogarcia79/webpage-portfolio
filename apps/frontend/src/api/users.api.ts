@@ -2,6 +2,26 @@ import { API_BASE_URL } from "../constants/constants";
 import { User, UserUpdate } from "../types/user";
 
 export class UsersAPI {
+  static async getAllUsers(token: string): Promise<User[]> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        let errText = response.statusText;
+        try {
+          const errJson = await response.json();
+          errText = errJson?.message || errJson?.error || errText;
+        } catch {}
+        throw new Error(`Failed to fetch users: ${errText}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
+    }
+  }
+
   static async getUserById(_id: string, token: string): Promise<User> {
     const res = await fetch(`${API_BASE_URL}/users/${_id}`, {
       headers: { Authorization: `Bearer ${token}` },

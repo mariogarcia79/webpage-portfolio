@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useEffect, useRef, useState } from 'react';
 
 const Navbar = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { role, isLoggedIn, logout } = useAuth();
   const [hidden, setHidden] = useState(false);
   const lastY = useRef<number>(0);
 
@@ -14,9 +14,9 @@ const Navbar = () => {
       const current = window.scrollY;
 
       if (current > lastY.current && current > 80) {
-        setHidden(true); // Scroll down → hide
+        setHidden(true);
       } else if (current < lastY.current) {
-        setHidden(false); // Scroll up → show
+        setHidden(false);
       }
 
       lastY.current = current;
@@ -41,6 +41,15 @@ const Navbar = () => {
       >
         Blog
       </NavLink>
+
+      {isLoggedIn && role === "admin" && (
+        <NavLink
+          to="/users"
+          className={({ isActive }) => isActive ? "active" : undefined}
+        >
+          Users
+        </NavLink>
+      )}
 
       {isLoggedIn ? (
         <>
