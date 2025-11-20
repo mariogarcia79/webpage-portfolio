@@ -97,7 +97,11 @@ class CommentAPI {
     }
   }
 
-  static async deleteComment(postId: string, commentId: string, token: string): Promise<void> {
+  static async deleteComment(postId: string, commentId: string, token: string | null): Promise<void> {
+    if (!token) {
+      throw new Error('Authentication token is required to delete a comment.');
+    }
+    
     try {
       const response = await fetch(`${API_BASE_URL}/comments/${postId}/${commentId}`, {
         method: 'DELETE',

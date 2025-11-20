@@ -86,7 +86,11 @@ function BlogCommentList({ postId }: Props) {
               key={c._id}
               className="comment-wrapper"
             >
-              <BlogComment comment={c} />
+              <BlogComment 
+                postId={postId} 
+                comment={c} 
+                setComments={setComments}
+              />
             </div>
           ))}
         </div>

@@ -29,7 +29,7 @@ function BlogList() {
           <Link to="/" className="link">$ cd ../</Link>
           {isLoggedIn && role === 'admin' && (
             <Link to="/blog/new" className="button compact">
-              New post
+              Create New post
             </Link>
           )}
         </div>

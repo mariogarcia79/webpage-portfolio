@@ -27,7 +27,9 @@ const UserDashboard = () => {
   useEffect(() => {
     if (routeUserId && routeUserId !== contextUserId && role !== "admin") {
       navigate("/dashboard");
-    }
+    } else if (routeUserId && routeUserId === contextUserId) {
+      navigate("/dashboard");
+    } 
   }, [routeUserId, contextUserId, role, navigate]);
 
   useEffect(() => {
@@ -127,9 +129,16 @@ const UserDashboard = () => {
 
   return (
     <div className="page-container" style={{ gap: "1.5rem" }}>
-      <div className="header" style={{ marginBottom: "1rem" }}>
-        <Link to="/" className="link">$ cd ../</Link>
-      </div>
+      {role === "admin"? (
+        <div className="header" style={{ marginBottom: "1rem" }}>
+          <Link to="/users" className="link">$ cd ../</Link>
+        </div>
+      ) : (
+        <div className="header" style={{ marginBottom: "1rem" }}>
+          <Link to="/" className="link">$ cd ../</Link>
+        </div>
+      )}
+      
 
       <h1 className="title large left" style={{ maxWidth: "900px", width: "100%" }}>
         # User Dashboard
@@ -157,43 +166,58 @@ const UserDashboard = () => {
               <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
           </div>
-          <button className="button compact" style={{ marginTop: "1rem" }}>Save</button>
+          <button className="button compact" style={{ marginTop: "1rem" }}>Save Profile</button>
         </form>
 
         {profileMessage && <p className="error block">{profileMessage}</p>}
       </div>
 
-      <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
-        <h1 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Change Password</h1>
+      {routeUserId ? null : (
+        <div className="container" style={{ maxWidth: "900px", padding: "1.2rem", gap: "1rem" }}>
+          <h1 className="title left" style={{ marginBottom: "-1rem", fontSize: "1.4rem" }}>&gt; Change Password</h1>
 
-        <form onSubmit={handlePasswordChange} style={{ justifyContent: "right" }}>
-          <div className="user-list">
-            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
-              <div className="user-password">Current Password</div>
-              <input type="password" className="input" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+          <form onSubmit={handlePasswordChange} style={{ justifyContent: "right" }}>
+            <div className="user-list">
+              <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+                <div className="user-password">Current Password</div>
+                <input type="password" className="input" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+              </div>
+              <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+                <div className="user-password">New Password</div>
+                <input type="password" className="input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+              </div>
+              <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
+                <div className="user-password">Confirm Password</div>
+                <input type="password" className="input" value={newPasswordConfirm} onChange={(e) => setNewPasswordConfirm(e.target.value)} />
+              </div>
             </div>
-            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
-              <div className="user-password">New Password</div>
-              <input type="password" className="input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-            </div>
-            <div className="user-row" style={{  gridTemplateColumns: "1fr 4fr" }}>
-              <div className="user-password">Confirm Password</div>
-              <input type="password" className="input" value={newPasswordConfirm} onChange={(e) => setNewPasswordConfirm(e.target.value)} />
-            </div>
-          </div>
-          <button className="button compact" style={{ marginTop: "1rem" }}>Update</button>
-        </form>
+            <button className="button compact" style={{ marginTop: "1rem" }}>Update Password</button>
+          </form>
 
-        {profileMessage && <p className="error">{profileMessage}</p>}
+          {profileMessage && <p className="error">{profileMessage}</p>}
+        </div>
+      )}
+      
+      {!routeUserId && role === "admin" ? (
+        <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
+          <h1 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h1>
+
+          <button disabled style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>
+            Delete account
+          </button>
+          {deleteMessage && <p className="error">{deleteMessage}</p>}
+        </div>
+      ) : (
+        <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
+          <h1 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h1>
+
+          <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>
+            Delete account
+          </button>
+          {deleteMessage && <p className="error">{deleteMessage}</p>}
+        </div>
+      )}
       </div>
-
-      <div className="container" style={{ maxWidth: "900px", padding: "1.2rem" }}>
-        <h1 className="title left" style={{ marginBottom: "0.5rem", fontSize: "1.4rem" }}>&gt; Danger Zone</h1>
-
-        <button style={{ marginTop: "1rem" }} className="button delete compact" onClick={handleDeleteUser}>Delete account</button>
-        {deleteMessage && <p className="error">{deleteMessage}</p>}
-      </div>
-    </div>
   );
 };
 
