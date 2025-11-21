@@ -4,16 +4,6 @@ import jwt from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "default_secret";
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: {
-      _id: string;
-      role: "admin" | "user";
-      email: string;
-    };
-  }
-}
-
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
