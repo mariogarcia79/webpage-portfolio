@@ -73,7 +73,7 @@ export function validateInput(content: string, isMd: boolean, maxLen: number): s
 }
 
 export function isObjectId(id: unknown): boolean {
-  if (typeof id !== 'string') return false;
+  if (!id || typeof id !== 'string') return false;
   return mongoose.Types.ObjectId.isValid(id);
 }
 
