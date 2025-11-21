@@ -10,7 +10,6 @@ const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// get image from public/uploads
 router.use(   "/",      express.static(path.join(__dirname, "../../public/uploads")));
 router.post(  "/",      authenticate, checkRole("admin"), upload.single("file"), UploadController.uploadFile);
 router.delete("/:url",  authenticate, checkRole("admin"), UploadController.deleteUpload);
