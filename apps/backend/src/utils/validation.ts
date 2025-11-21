@@ -56,7 +56,7 @@ export function validatePassword(password: string): string {
   return password;
 }
 
-export function validateInput(content: string, isMd: boolean, maxLen: number): string {
+export function validateInput(content: string | undefined, isMd: boolean, maxLen: number): string {
   if (!content) throw new Error("Comment content is required");
   if (typeof content !== 'string') throw new Error("Comment content must be a string");
 
@@ -81,12 +81,12 @@ export function escapeRegex(input: string): string {
   return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function isValidEmail(email: unknown): boolean {
+export function isValidEmail(email: unknown): boolean {
   if (typeof email !== 'string') return false;
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 }
 
-function sanitizeText(input: unknown): string {
+export function sanitizeText(input: unknown): string {
   if (input == null) return '';
   let text = String(input);
 
@@ -102,11 +102,11 @@ function sanitizeText(input: unknown): string {
 
 // Dummy function, inline HTML is disabled in the frontend markdown renderer,
 // so arbitrary code hosted there should be unharmful.
-function sanitizeMarkdown(input: unknown): string {
+export function sanitizeMarkdown(input: unknown): string {
   return String(input);
 }
 
-function sanitizeMongoInput(str: string): string {
+export function sanitizeMongoInput(str: string): string {
   if (!str) return '';
   // remove leading $ to prevent operator injection
   return str.replace(/^\$/, '');

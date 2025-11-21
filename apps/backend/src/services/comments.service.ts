@@ -4,11 +4,10 @@ import { IComment } from "../types/comment";
 
 import {
   isObjectId,
-  sanitizeText,
-  sanitizeMarkdown,
-  sanitizeMongoInput,
+  validateInput,
   escapeRegex
 } from "../utils/validation";
+import { MAX_COMMENT_LENGTH, MAX_CONTENT_LENGTH } from "../config/validation";
 
 class CommentService {
 
@@ -51,7 +50,7 @@ class CommentService {
       }
 
       if (typeof value === "string") {
-        const safeStr = sanitizeMongoInput(sanitizeText(value));
+        const safeStr = validateInput(value, true, MAX_COMMENT_LENGTH);
         mongoFilter[key] = new RegExp(escapeRegex(safeStr), "i");
         continue;
       }
@@ -81,7 +80,7 @@ class CommentService {
 
     return CommentModel.find(mongoFilter)
       .sort(sortOrder)
-      .populate("author", "name username avatar");
+      .populate("author", "name");
   }
 
   static async getCommentById(id: string): Promise<ICommentDocument | null> {
@@ -89,7 +88,7 @@ class CommentService {
 
     try {
       return CommentModel.findById(id)
-        .populate("author", "name username avatar");
+        .populate("author", "name");
     } catch (err) {
       console.error("Error: getCommentById:", err);
       return null;
@@ -104,7 +103,7 @@ class CommentService {
 
     const updateData: Partial<ICommentDocument> = {};
     if (partial.content !== undefined) {
-      updateData.content = sanitizeMarkdown(partial.content);
+      updateData.content = validateInput(partial.content, true, MAX_COMMENT_LENGTH);
     }
     if (partial.published !== undefined) {
       updateData.published = partial.published;
@@ -113,7 +112,7 @@ class CommentService {
     try {
       return CommentModel.findByIdAndUpdate(id, updateData, {
         new: true
-      }).populate("author", "name username avatar");
+      }).populate("author", "name");
     } catch (err) {
       console.error("Error: patchCommentById:", err);
       return null;
@@ -130,13 +129,13 @@ class CommentService {
       const newComment = new CommentModel({
         author: data.author,
         post: data.post,
-        content: sanitizeMarkdown(data.content),
+        content: validateInput(data.content, true, MAX_COMMENT_LENGTH),
         published: data.published ?? true
       });
 
       const saved = await newComment.save();
 
-      return saved.populate("author", "name username avatar");
+      return saved.populate("author", "name");
     } catch (err) {
       console.error("Error: createComment:", err);
       return null;
