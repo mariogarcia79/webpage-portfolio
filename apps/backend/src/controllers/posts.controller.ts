@@ -115,9 +115,9 @@ class PostController {
     }
 
     try {
-      const cleanTitle = validateInput(req.body.title, false, MAX_TITLE_LENGTH);
+      const cleanTitle   = validateInput(req.body.title,   false, MAX_TITLE_LENGTH);
       const cleanSummary = validateInput(req.body.summary, false, MAX_SUMMARY_LENGTH);
-      const cleanContent = validateInput(req.body.content, true, MAX_CONTENT_LENGTH);
+      const cleanContent = validateInput(req.body.content, true,  MAX_CONTENT_LENGTH);
 
       const updatedPost = await PostService.patchPostById(id, body);
       

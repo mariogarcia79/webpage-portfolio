@@ -77,6 +77,10 @@ export function isObjectId(id: unknown): boolean {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
+export function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function isValidEmail(email: unknown): boolean {
   if (typeof email !== 'string') return false;
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
@@ -100,10 +104,6 @@ function sanitizeText(input: unknown): string {
 // so arbitrary code hosted there should be unharmful.
 function sanitizeMarkdown(input: unknown): string {
   return String(input);
-}
-
-function escapeRegex(input: string): string {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function sanitizeMongoInput(str: string): string {
