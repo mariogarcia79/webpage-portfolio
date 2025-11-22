@@ -8,7 +8,6 @@ dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 connectDB().then(() => {
-  // Create default admin user
   (async () => { await createDefaultAdmin(); })();
 
   app.listen(PORT, () => {
