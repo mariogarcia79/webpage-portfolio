@@ -23,24 +23,20 @@ class UserService {
       const value = filter[key];
       if (value == null) continue;
       
-      // Boolean fields
       if (typeof value === "boolean") {
         mongoFilter[key] = value;
         continue;
       }
       
-      // String fields
       if (typeof value === "string") {
         const safeStr = sanitizeMongoInput(sanitizeText(value));
         
-        // Email: validate format
         if (key === "email" && !isValidEmail(safeStr)) continue;
         
         mongoFilter[key] = new RegExp(escapeRegex(safeStr), "i");
         continue;
       }
       
-      // Direct RegExp
       if (value instanceof RegExp) {
         mongoFilter[key] = value;
       }
@@ -123,15 +119,12 @@ class UserService {
       const user = await UserModel.findById(id);
       if (!user) return false;
       
-      // Check if current password matches
       const isMatch = await bcrypt.compare(currentPassword, user.hash);
       if (!isMatch) return false;
       
-      // Hash the new password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
       
-      // Update user hash
       user.hash = hashedPassword;
       await user.save();
       

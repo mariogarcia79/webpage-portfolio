@@ -4,10 +4,10 @@ import { IComment } from "../types/comment";
 
 import {
   isObjectId,
-  validateInput,
-  escapeRegex
+  escapeRegex,
+  sanitizeMongoInput,
+  sanitizeText
 } from "../utils/validation";
-import { MAX_COMMENT_LENGTH, MAX_CONTENT_LENGTH } from "../config/validation";
 
 class CommentService {
 
@@ -50,7 +50,7 @@ class CommentService {
       }
 
       if (typeof value === "string") {
-        const safeStr = validateInput(value, true, MAX_COMMENT_LENGTH);
+        const safeStr = sanitizeMongoInput(sanitizeText(value));
         mongoFilter[key] = new RegExp(escapeRegex(safeStr), "i");
         continue;
       }
@@ -103,7 +103,7 @@ class CommentService {
 
     const updateData: Partial<ICommentDocument> = {};
     if (partial.content !== undefined) {
-      updateData.content = validateInput(partial.content, true, MAX_COMMENT_LENGTH);
+      updateData.content = sanitizeMongoInput(sanitizeText(partial.content));
     }
     if (partial.published !== undefined) {
       updateData.published = partial.published;
@@ -129,7 +129,7 @@ class CommentService {
       const newComment = new CommentModel({
         author: data.author,
         post: data.post,
-        content: validateInput(data.content, true, MAX_COMMENT_LENGTH),
+        content: sanitizeMongoInput(sanitizeText(data.content)),
         published: data.published ?? true
       });
 

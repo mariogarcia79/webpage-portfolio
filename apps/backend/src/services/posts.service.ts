@@ -12,7 +12,6 @@ import {
 
 class PostService {
 
-  // Build a safe filter from partial post input
   private static buildFilter(filter?: Partial<IPost>): FilterQuery<IPost> {
     const mongoFilter: FilterQuery<IPost> = {};
     if (!filter) return mongoFilter;
@@ -29,7 +28,6 @@ class PostService {
       const value = filter[key];
       if (value == null) continue;
 
-      // Author: special handling (is of type Types.ObjectId)
       if (key === "author") {
         if (typeof value === "string" && isObjectId(value)) {
           mongoFilter.author = new Types.ObjectId(value);
@@ -39,20 +37,17 @@ class PostService {
         continue;
       }
 
-      // Boolean fields
       if (typeof value === "boolean") {
         mongoFilter[key] = value;
         continue;
       }
 
-      // String fields: sanitize and prevent NoSQL injection
       if (typeof value === "string") {
         const safeStr = sanitizeMongoInput(sanitizeText(value));
         mongoFilter[key] = new RegExp(escapeRegex(safeStr), "i");
         continue;
       }
 
-      // Allow direct RegExp only if truly safe
       if (value instanceof RegExp) {
         mongoFilter[key] = value;
       }
@@ -70,10 +65,8 @@ class PostService {
   }): Promise<IPostDocument[]> {
     const mongoFilter = this.buildFilter(filter);
 
-    // Default: only published posts
     if (mongoFilter.published == null) mongoFilter.published = true;
 
-    // Type-safe sort
     const sortOrder: { [key: string]: SortOrder } = {
       createdAt: sorted ? "desc" : "asc"
     };
