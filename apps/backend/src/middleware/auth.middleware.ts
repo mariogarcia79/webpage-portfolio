@@ -10,7 +10,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
 
-  const token = req.header("Authorization")?.replace("Bearer ", "");
+  const token = req.cookies.jwt;
 
   if (!token) {
     return res

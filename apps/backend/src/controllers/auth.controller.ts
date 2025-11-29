@@ -114,8 +114,15 @@ class AuthController {
         { expiresIn: "1h" }
       );
       
-      return res
-        .json({ token });
+      res.cookie("jwt", { token }, 
+        {
+          maxAge: 1000 * 60 * 5,
+          secure: false,            // CHANGE THIS BEFORE DEPLOY
+          httpOnly: true,
+          sameSite: "strict"
+        })
+
+      return res.json({ message: "set cookie" });
 
     } catch (err: unknown) {
       console.error(err);
