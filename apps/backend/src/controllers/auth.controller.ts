@@ -132,6 +132,12 @@ class AuthController {
       return res.status(500).json({ error: "Unknown error" });
     }
   }
+
+  static async getUserInfo(req: Request, res: Response): Promise<Response> {
+    const user = res.cookie.arguments;
+    console.log(user);
+    return res.json(user);
+  }
 }
 
 export default AuthController;

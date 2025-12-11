@@ -9,4 +9,6 @@ router.post("/login",   AuthController.logIn);
 
 router.post("/signup-admin", authenticate, checkRole("admin"), AuthController.signUpAdmin);
 
+router.get("/user", authenticate, AuthController.getUserInfo);
+
 export default router;

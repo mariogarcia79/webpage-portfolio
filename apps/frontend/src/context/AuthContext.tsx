@@ -1,18 +1,14 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { User } from "../types/user";
+import { API_BASE_URL } from "../constants/constants";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+
+type Role = User["role"]; // "admin" | "user"
 
 interface AuthContextType {
-  token: string | null;
-  role: string | null;
+  role: Role | null;
   _id: string | null;
   isLoggedIn: boolean;
-
-  login: (token: string) => void;
+  login: () => void;
   logout: () => void;
 }
 
@@ -23,66 +19,43 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const parseJwt = (token: string | null) => {
-    if (!token) return null;
-    try {
-      const payloadJson = atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"));
-      return JSON.parse(payloadJson);
-    } catch {
-      return null;
-    }
+  const [_id, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  async function getUser(): Promise<User> {
+    const res = await fetch(`${API_BASE_URL}/auth/user`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Error fetching user info");
+    return res.json();
+  }
+
+  const login = async () => {
+    const user = await getUser();
+    setUserId(user._id);
+    setRole(user.role);
+    setIsLoggedIn(true);
   };
 
-  const parseUserIdFromToken = (token: string | null): string | null => {
-    const payload = parseJwt(token);
-    return payload?._id || null;
-  };
-
-  const parseRoleFromToken = (token: string | null): string | null => {
-    const payload = parseJwt(token);
-    if (!payload) return null;
-    if (typeof payload.role === "string") return payload.role;
-    if (Array.isArray(payload.roles) && payload.roles.length > 0) return payload.roles[0];
-    if (payload.isAdmin) return "admin";
-    return null;
-  };
-
-  // Initialize state from sessionStorage
-  const [token, setToken] = useState<string | null>(sessionStorage.getItem("token"));
-  const [_id, setUserId] = useState<string | null>(parseUserIdFromToken(token));
-  const [role, setRole] = useState<string | null>(parseRoleFromToken(token));
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!token);
-
-  // Persist token & derived values to sessionStorage
-  useEffect(() => {
-    if (token) {
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("_id", _id || "");
-      if (role) sessionStorage.setItem("role", role);
-      setIsLoggedIn(true);
-    } else {
-      sessionStorage.clear();
-      setIsLoggedIn(false);
-    }
-  }, [token, _id, role]);
-
-  // LOGIN
-  const login = (newToken: string) => {
-    setToken(newToken);
-    setUserId(parseUserIdFromToken(newToken));
-    setRole(parseRoleFromToken(newToken));
-  };
-
-  // LOGOUT
   const logout = () => {
-    setToken(null);
-    setRole(null);
     setUserId(null);
-    sessionStorage.clear();
+    setRole(null);
+    setIsLoggedIn(false);
   };
+
+  useEffect(() => {
+    getUser()
+      .then((user) => {
+        setUserId(user._id);
+        setRole(user.role);
+        setIsLoggedIn(true);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ token, role, _id, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ role, _id, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -90,8 +63,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = (): AuthContextType => {
   const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error("useAuth must be used inside an AuthProvider");
-  }
+  if (!ctx) throw new Error("useAuth must be used inside an AuthProvider");
   return ctx;
 };
