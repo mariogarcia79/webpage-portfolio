@@ -114,15 +114,24 @@ class AuthController {
         { expiresIn: "1h" }
       );
       
-      res.cookie("jwt", { token }, 
+      res.cookie("jwt", token, 
         {
-          maxAge: 1000 * 60 * 5,
+          maxAge: 1000 * 60 * 60,   // 1 hour
           secure: false,            // CHANGE THIS BEFORE DEPLOY
           httpOnly: true,
           sameSite: "strict"
-        })
+        }
+      );
 
-      return res.json({ message: "set cookie" });
+      return res.json({ 
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      });
 
     } catch (err: unknown) {
       console.error(err);
@@ -134,9 +143,33 @@ class AuthController {
   }
 
   static async getUserInfo(req: Request, res: Response): Promise<Response> {
-    const user = res.cookie.arguments;
-    console.log(user);
-    return res.json(user);
+    try {
+      if (!req.user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const user = await UserService.getUserById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return res.status(500).json({ error: err.message });
+      }
+      return res.status(500).json({ error: "Unknown error" });
+    }
+  }
+
+  static async logout(req: Request, res: Response): Promise<Response> {
+    res.clearCookie("jwt");
+    return res.json({ message: "Logged out successfully" });
   }
 }
 

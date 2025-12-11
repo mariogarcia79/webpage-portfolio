@@ -38,14 +38,14 @@ class PostAPI {
     }
   }
 
-  static async createPost(title: string, summary: string, content: string, token: string): Promise<Post> {
+  static async createPost(title: string, summary: string, content: string): Promise<Post> {
     try {
       const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify({ title, summary, content }),
       });
       if (!response.ok) {
@@ -63,14 +63,14 @@ class PostAPI {
     }
   }
 
-  static async updatePost(id: string, partial: Partial<Post>, token: string): Promise<Post> {
+  static async updatePost(id: string, partial: Partial<Post>): Promise<Post> {
     try {
       const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify(partial),
       });
       if (!response.ok) {
@@ -88,13 +88,11 @@ class PostAPI {
     }
   }
 
-  static async deletePost(id: string, token: string): Promise<void> {
+  static async deletePost(id: string): Promise<void> {
     try {
       const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
       if (!response.ok) {
         let errText = response.statusText;

@@ -11,7 +11,7 @@ function BlogPost() {
   const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const { isLoggedIn, role, token } = useAuth();
+  const { isLoggedIn, role } = useAuth();
 
   useEffect(() => {
     if (!id) return;
@@ -21,11 +21,11 @@ function BlogPost() {
   }, [id]);
 
   const handleDelete = async () => {
-    if (!id || !token || !confirm('Are you sure you want to delete this post?')) return;
+    if (!id || !confirm('Are you sure you want to delete this post?')) return;
     
     setDeleting(true);
     try {
-      await PostAPI.deletePost(id, token);
+      await PostAPI.deletePost(id);
       navigate('/blog');
     } catch {
       alert('Failed to delete post');

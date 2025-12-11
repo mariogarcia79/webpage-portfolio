@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../../constants/constants';
 function BlogEditor() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { token, isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   const TITLE_MAX = 300;
   const SUMMARY_MAX = 1000;
@@ -40,7 +40,7 @@ function BlogEditor() {
 
   // Load post if editing
   useEffect(() => {
-    if (id && token) {
+    if (id) {
       setLoading(true);
       PostAPI.getPostById(id)
         .then(post => {
@@ -56,12 +56,12 @@ function BlogEditor() {
         .catch(() => setError('Failed to load post'))
         .finally(() => setLoading(false));
     }
-  }, [id, token]);
+  }, [id]);
 
   // Uploads
   const handleFileUpload = async (file: File) => {
     try {
-      await UploadAPI.uploadFile(file, token || "");
+      await UploadAPI.uploadFile(file);
       const url = `${API_BASE_URL}/uploads/${file.name}`;
       setUploadedFiles(prev => [...prev, url]);
     } catch (err) {
@@ -78,8 +78,6 @@ function BlogEditor() {
 
   // Submit
   const handleSubmit = async () => {
-    if (!token) return setError('You must be logged in');
-
     const clientError = validatePost(title, summary, content);
     if (clientError) return setError(clientError);
 
@@ -88,9 +86,9 @@ function BlogEditor() {
       setError('');
 
       if (isEditing && id) {
-        await PostAPI.updatePost(id, { title, summary, content }, token);
+        await PostAPI.updatePost(id, { title, summary, content });
       } else {
-        await PostAPI.createPost(title, summary, content, token);
+        await PostAPI.createPost(title, summary, content);
       }
 
       navigate('/blog');

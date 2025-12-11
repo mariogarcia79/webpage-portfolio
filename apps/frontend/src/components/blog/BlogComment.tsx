@@ -9,11 +9,11 @@ interface BlogCommentProps {
 }
 
 function BlogComment({ postId, comment, setComments }: BlogCommentProps) {
-  const { role, token } = useAuth();
+  const { role } = useAuth();
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      await CommentAPI.deleteComment(postId, commentId, token);
+      await CommentAPI.deleteComment(postId, commentId);
 
       setComments((prevComments) =>
         prevComments.filter((c) => c._id !== commentId)

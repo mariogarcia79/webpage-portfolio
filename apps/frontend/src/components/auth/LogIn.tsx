@@ -24,9 +24,10 @@ function Login() {
       setLoading(true);
       setError('');
 
-      const response = await AuthAPI.logIn(name.trim(), password);
-
-      login(response.token);
+      await AuthAPI.logIn(name.trim(), password);
+      
+      // Call login to fetch and set user info
+      await login();
 
       navigate('/blog');
     } catch (err: any) {

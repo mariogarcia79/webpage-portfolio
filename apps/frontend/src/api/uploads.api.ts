@@ -3,20 +3,15 @@ import { API_BASE_URL } from '../constants/constants';
 
 class UploadAPI {
 
-  static async uploadFile(
-    file: File,
-    token: string
-  ): Promise<Upload> {
+  static async uploadFile(file: File): Promise<Upload> {
     try {
       const formData = new FormData();
       formData.append('file', file);
 
       const response = await fetch(`${API_BASE_URL}/uploads`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          // do not set Content-Type — browser sets multipart/form-data
-        },
+        credentials: 'include',
+        // do not set Content-Type — browser sets multipart/form-data
         body: formData,
       });
 
@@ -36,13 +31,11 @@ class UploadAPI {
     }
   }
 
-  static async deleteUpload(id: string, token: string): Promise<void> {
+  static async deleteUpload(id: string): Promise<void> {
     try {
       const response = await fetch(`${API_BASE_URL}/uploads/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include',
       });
 
       if (!response.ok) {

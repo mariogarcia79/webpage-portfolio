@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import UsersAPI from "../../api/users.api";
 
 const UserDashboard = () => {
-  const { token, _id: contextUserId, logout, role } = useAuth();
+  const { _id: contextUserId, logout, role, isLoading } = useAuth();
   const { userId: routeUserId } = useParams();
   const navigate = useNavigate();
   const _id = routeUserId ?? contextUserId;
@@ -25,36 +25,38 @@ const UserDashboard = () => {
   const [deleteMessage, setDeleteMessage] = useState("");
 
   useEffect(() => {
+    if (isLoading) return; // Wait for auth context to load
+    
     if (routeUserId && routeUserId !== contextUserId && role !== "admin") {
       navigate("/dashboard");
     } else if (routeUserId && routeUserId === contextUserId) {
       navigate("/dashboard");
     } 
-  }, [routeUserId, contextUserId, role, navigate]);
+  }, [routeUserId, contextUserId, role, navigate, isLoading]);
 
   useEffect(() => {
-    if (!_id || !token) {
+    if (!_id) {
       setLoading(false);
       return;
     }
 
-    UsersAPI.getUserById(_id, token)
+    UsersAPI.getUserById(_id)
       .then((user) => {
         setUserData(user);
         setName(user.name);
         setEmail(user.email);
       })
       .finally(() => setLoading(false));
-  }, [_id, token]);
+  }, [_id]);
 
   const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!_id || !token) return;
+    if (!_id) return;
 
     const data: UserUpdate = { _id, name, email };
 
     try {
-      const updated = await UsersAPI.updateUserById(data, token);
+      const updated = await UsersAPI.updateUserById(data);
       setUserData(updated);
       setProfileMessage("Profile updated!");
     } catch {
@@ -64,7 +66,7 @@ const UserDashboard = () => {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!_id || !token) return;
+    if (!_id) return;
 
     if (newPassword !== newPasswordConfirm) {
       setPasswordMessage("New passwords do not match");
@@ -73,7 +75,7 @@ const UserDashboard = () => {
 
     const data: UserUpdate = { _id, currentPassword, newPassword };
     try {
-      await UsersAPI.updateUserPassword(data, token);
+      await UsersAPI.updateUserPassword(data);
       setPasswordMessage("Password changed successfully");
       setCurrentPassword("");
       setNewPassword("");
@@ -84,13 +86,13 @@ const UserDashboard = () => {
   };
 
   const handleDeleteUser = async () => {
-    if (!_id || !token) return;
+    if (!_id) return;
 
     const confirmed = window.confirm("Are you sure?");
     if (!confirmed) return;
 
     try {
-      await UsersAPI.deleteUserById(_id, token);
+      await UsersAPI.deleteUserById(_id);
       if (_id === contextUserId) {
         logout();
         navigate("/");
@@ -102,7 +104,15 @@ const UserDashboard = () => {
     }
   };
 
-  if (!token || !contextUserId) {
+  if (isLoading) {
+    return (
+      <div className="page-container">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!contextUserId) {
     return (
       <div className="page-container">
         <p>You must <Link to="/login" className="link">log in</Link>.</p>

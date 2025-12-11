@@ -2,10 +2,10 @@ import { API_BASE_URL } from "../constants/constants";
 import { User, UserUpdate } from "../types/user";
 
 export class UsersAPI {
-  static async getAllUsers(token: string): Promise<User[]> {
+  static async getAllUsers(): Promise<User[]> {
     try {
       const response = await fetch(`${API_BASE_URL}/users`, {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include',
       });
       if (!response.ok) {
         let errText = response.statusText;
@@ -22,23 +22,23 @@ export class UsersAPI {
     }
   }
 
-  static async getUserById(_id: string, token: string): Promise<User> {
+  static async getUserById(_id: string): Promise<User> {
     const res = await fetch(`${API_BASE_URL}/users/${_id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include',
     });
 
     if (!res.ok) throw new Error("Error fetching user");
     return res.json();
   }
 
-  static async updateUserById(data: Partial<UserUpdate>, token: string): Promise<User> {
+  static async updateUserById(data: Partial<UserUpdate>): Promise<User> {
     const _id = data._id;
     const res = await fetch(`${API_BASE_URL}/users/${_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -46,14 +46,14 @@ export class UsersAPI {
     return res.json();
   }
 
-  static async updateUserPassword(data: Partial<UserUpdate>, token: string): Promise<User> {
+  static async updateUserPassword(data: Partial<UserUpdate>): Promise<User> {
     const _id = data._id;
     const res = await fetch(`${API_BASE_URL}/users/pwd/${_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -61,10 +61,10 @@ export class UsersAPI {
     return res.json();
   }
 
-  static async deleteUserById(_id: string, token: string): Promise<void> {
+  static async deleteUserById(_id: string): Promise<void> {
     const res = await fetch(`${API_BASE_URL}/users/${_id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include',
     });
 
     if (!res.ok) throw new Error("Error deleting user");

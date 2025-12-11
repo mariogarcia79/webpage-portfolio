@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/signup",  AuthController.signUp);
 router.post("/login",   AuthController.logIn);
+router.post("/logout",  AuthController.logout);
 
 router.post("/signup-admin", authenticate, checkRole("admin"), AuthController.signUpAdmin);
 

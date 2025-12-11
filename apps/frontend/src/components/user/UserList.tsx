@@ -8,17 +8,21 @@ function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { _id, token, role } = useAuth();
+  const { _id, role, isLoading } = useAuth();
 
   
   useEffect(() => {
-    if (!token || role !== 'admin') {
+    if (isLoading) {
+      return; // Wait for auth context to load
+    }
+
+    if (role !== 'admin') {
       setLoading(false);
       setError('Unauthorized access.');
       return;
     }
 
-    UsersAPI.getAllUsers(token)
+    UsersAPI.getAllUsers()
       .then((data) => {
         setUsers(data);
         if (data.length === 0) {
@@ -27,16 +31,16 @@ function UserList() {
       })
       .catch(() => setError('Error loading users.'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [role, isLoading]);
 
   const handleDeleteUser = async (userId: string) => {
-      if (!userId || !token) return;
+      if (!userId) return;
   
       const confirmed = window.confirm("Are you sure?");
       if (!confirmed) return;
   
       try {
-        await UsersAPI.deleteUserById(userId, token);
+        await UsersAPI.deleteUserById(userId);
         setUsers(prev => prev.filter(u => u._id !== userId));
       } catch {
         console.error("Failed to delete user");

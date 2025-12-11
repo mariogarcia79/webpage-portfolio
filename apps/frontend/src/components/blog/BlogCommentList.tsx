@@ -9,7 +9,7 @@ interface Props {
 }
 
 function BlogCommentList({ postId }: Props) {
-  const { isLoggedIn, token } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,11 +28,11 @@ function BlogCommentList({ postId }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim() || !token) return;
+    if (!content.trim()) return;
 
     setPosting(true);
     try {
-      const newComment = await CommentAPI.createComment(postId, content.trim(), token);
+      const newComment = await CommentAPI.createComment(postId, content.trim());
 
       setComments((prev) => [newComment, ...prev]);
       setContent("");

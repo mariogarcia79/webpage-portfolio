@@ -8,6 +8,7 @@ interface AuthContextType {
   role: Role | null;
   _id: string | null;
   isLoggedIn: boolean;
+  isLoading: boolean;
   login: () => void;
   logout: () => void;
 }
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [_id, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<Role | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   async function getUser(): Promise<User> {
     const res = await fetch(`${API_BASE_URL}/auth/user`, {
@@ -32,16 +34,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   const login = async () => {
-    const user = await getUser();
-    setUserId(user._id);
-    setRole(user.role);
-    setIsLoggedIn(true);
+    try {
+      const user = await getUser();
+      setUserId(user._id);
+      setRole(user.role);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
   };
 
-  const logout = () => {
-    setUserId(null);
-    setRole(null);
-    setIsLoggedIn(false);
+  const logout = async () => {
+    try {
+      // Call backend to clear cookie
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUserId(null);
+      setRole(null);
+      setIsLoggedIn(false);
+    }
   };
 
   useEffect(() => {
@@ -51,11 +68,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setRole(user.role);
         setIsLoggedIn(true);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
-    <AuthContext.Provider value={{ role, _id, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ role, _id, isLoggedIn, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

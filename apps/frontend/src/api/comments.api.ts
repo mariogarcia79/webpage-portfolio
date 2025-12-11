@@ -38,14 +38,14 @@ class CommentAPI {
     }
   }
 
-  static async createComment(postId: string, content: string, token: string): Promise<Comment> {
+  static async createComment(postId: string, content: string): Promise<Comment> {
     try {
       const response = await fetch(`${API_BASE_URL}/comments/${postId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify({ content }),
       });
 
@@ -68,16 +68,15 @@ class CommentAPI {
   static async updateComment(
     postId: string,
     commentId: string,
-    partial: Partial<Comment>,
-    token: string
+    partial: Partial<Comment>
   ): Promise<Comment> {
     try {
       const response = await fetch(`${API_BASE_URL}/comments/${postId}/${commentId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify(partial),
       });
 
@@ -97,17 +96,11 @@ class CommentAPI {
     }
   }
 
-  static async deleteComment(postId: string, commentId: string, token: string | null): Promise<void> {
-    if (!token) {
-      throw new Error('Authentication token is required to delete a comment.');
-    }
-    
+  static async deleteComment(postId: string, commentId: string): Promise<void> {
     try {
       const response = await fetch(`${API_BASE_URL}/comments/${postId}/${commentId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
 
       if (!response.ok) {

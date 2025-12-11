@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 
 function SignUp() {
   const navigate = useNavigate();
-  const { role, token } = useAuth();
+  const { role } = useAuth();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -25,7 +25,7 @@ function SignUp() {
       setError('');
 
       if (role === "admin") {
-        await AuthAPI.signUpAdmin(name.trim(), email.trim(), password, role, token);
+        await AuthAPI.signUpAdmin(name.trim(), email.trim(), password, role);
       } else {
         await AuthAPI.signUp(name.trim(), email.trim(), password);
       }
