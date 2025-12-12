@@ -13,6 +13,11 @@ const schema = {
     ...defaultSchema.attributes,
     img: [...defaultImgAttrs, "src", "alt"],
   },
+  // Only allow safe src protocols for images
+  protocols: {
+    ...((defaultSchema as any).protocols || {}),
+    src: ["http", "https", "data"],
+  },
 };
 
 interface MarkdownProps {
@@ -22,7 +27,8 @@ interface MarkdownProps {
 export default function MarkdownRenderer({ content }: MarkdownProps) {
   return (
     <div className="prose">
-      <ReactMarkdown rehypePlugins={[[rehypeSanitize, schema], rehypePrism]}>
+      {/* run syntax highlighting first, then sanitize output to ensure no unsafe content remains */}
+      <ReactMarkdown rehypePlugins={[rehypePrism, [rehypeSanitize, schema]]}>
         {content}
       </ReactMarkdown>
     </div>

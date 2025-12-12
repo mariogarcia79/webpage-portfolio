@@ -114,14 +114,12 @@ class AuthController {
         { expiresIn: "1h" }
       );
       
-      res.cookie("jwt", token, 
-        {
-          maxAge: 1000 * 60 * 60,   // 1 hour
-          secure: false,            // CHANGE THIS BEFORE DEPLOY
-          httpOnly: true,
-          sameSite: "strict"
-        }
-      );
+      res.cookie("jwt", token, {
+        maxAge: 1000 * 60 * 60, // 1 hour
+        secure: process.env.NODE_ENV === "production", // require HTTPS in prod
+        httpOnly: true,
+        sameSite: "strict",
+      });
 
       return res.json({ 
         message: "Login successful",
