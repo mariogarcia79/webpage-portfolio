@@ -11,13 +11,25 @@ const mongoPort = process.env.MONGO_PORT || '27017';
 const mongoDbName = process.env.MONGO_DB_NAME || DEFAULT_DB;
 const mongoUrl = process.env.MONGO_URL || `mongodb://${mongoHost}:${mongoPort}/${mongoDbName}`;
 const connectDB = async () => {
-    try {
-        await mongoose_1.default.connect(mongoUrl);
-        console.log(`Connected to MongoDB: ${mongoUrl}`);
-    }
-    catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        process.exit(1);
+    const maxAttempts = process.env.DB_CONNECT_MAX_ATTEMPTS ? parseInt(process.env.DB_CONNECT_MAX_ATTEMPTS, 10) : 0; // 0 = unlimited
+    const retryDelay = process.env.DB_CONNECT_RETRY_DELAY_MS ? parseInt(process.env.DB_CONNECT_RETRY_DELAY_MS, 10) : 3000;
+    let attempt = 0;
+    while (true) {
+        attempt++;
+        try {
+            await mongoose_1.default.connect(mongoUrl);
+            console.log(`Connected to MongoDB: ${mongoUrl} (attempt ${attempt})`);
+            break;
+        }
+        catch (error) {
+            console.error(`MongoDB connection attempt ${attempt} failed:`, error.message || error);
+            if (maxAttempts > 0 && attempt >= maxAttempts) {
+                console.error('Max MongoDB connection attempts reached, exiting.');
+                process.exit(1);
+            }
+            console.log(`Retrying in ${retryDelay}ms...`);
+            await new Promise((res) => setTimeout(res, retryDelay));
+        }
     }
 };
 exports.connectDB = connectDB;
