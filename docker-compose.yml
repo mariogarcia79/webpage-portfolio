@@ -8,11 +8,14 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=4000
+      - MONGO_URL=mongodb://mongo:27017/webpage-portfolio
     networks:
       - app-network
     # Only expose internally to Docker network
     expose:
       - "4000"
+    depends_on:
+      - mongo
 
   frontend:
     build: ./frontend
@@ -40,6 +43,23 @@ services:
     networks:
       - app-network
 
+  mongo:
+    image: mongo:6
+    container_name: mongo-db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=webpage-portfolio
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
