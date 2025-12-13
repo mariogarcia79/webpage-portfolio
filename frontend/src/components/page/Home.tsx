@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Banner from './Banner';
 
 function Home() {
   const { isLoggedIn, role } = useAuth();
@@ -12,11 +13,11 @@ function Home() {
         </div>
         <div className="post-content">
           <h1 className="title large left"># Welcome</h1>
-          <div className="post-summary">
-            <p>Hi! This is my personal blog where I share thoughts, projects, and ideas about web development and technology.</p>
-          </div>
+          <Banner></Banner>
           <div className="post-body">
-            <p>Feel free to explore my blog posts and learn more about the topics that interest you. If you have any questions or feedback, don't hesitate to reach out.</p>
+            <br></br>
+            <p>This blog is all about getting into the guts of technology. We’ll explore <strong>reverse engineering embedded systems</strong>, break down firmware, and learn how to bypass software protections. It’s not about shortcuts, but understanding how things really work and how to make them work for you.</p>
+            <br></br>
             {isLoggedIn && role === 'admin' && (
               <p>
                 As an admin, you can <Link to="/blog/new" className="link">create new posts</Link> or <Link to="/blog" className="link">manage existing posts</Link>.
