@@ -66,9 +66,17 @@ export function validateInput(content: string | undefined, isMd: boolean, maxLen
   if (cleanContent.length > maxLen)
     throw new Error(`Comment content must be at most ${maxLen} characters long`);
 
-  cleanContent = sanitizeText(cleanContent);
-  cleanContent = sanitizeMongoInput(cleanContent);
-  if (isMd) cleanContent = sanitizeMarkdown(cleanContent);
+  // For markdown content we want to preserve Markdown syntax and any
+  // intentional inline HTML. Avoid stripping HTML tags here — leave
+  // presentation sanitization to the frontend renderer (or a dedicated
+  // sanitizer) and only neutralize characters that could affect MongoDB.
+  if (isMd) {
+    cleanContent = sanitizeMongoInput(cleanContent);
+    cleanContent = sanitizeMarkdown(cleanContent);
+  } else {
+    cleanContent = sanitizeText(cleanContent);
+    cleanContent = sanitizeMongoInput(cleanContent);
+  }
   return cleanContent;
 }
 

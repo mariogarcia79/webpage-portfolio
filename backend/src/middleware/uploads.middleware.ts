@@ -1,11 +1,8 @@
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
 import crypto from "crypto";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// In CommonJS builds __dirname is available; use it to resolve the uploads directory
 const uploadDir = path.join(__dirname, "../../public/uploads");
 
 const allowedMimeTypes = new Set([

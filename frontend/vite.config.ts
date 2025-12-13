@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  // Serve built assets with relative paths so the app works when deployed
+  // from a sub-path or when files are served statically (e.g. GitHub Pages).
+  base: './',
   plugins: [react()],
   server: {
     port: 5173,
@@ -16,7 +19,10 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
-        // Manual chunking to separate react and markdown-related libs
+        // Keep chunking conservative to avoid circular-import initialization
+        // issues between shared helper code and markdown plugins. Only
+        // separate the large React runtime; leave other node_modules in
+        // a single vendor chunk so interdependent libs initialize safely.
         manualChunks(id: string) {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
@@ -24,9 +30,6 @@ export default defineConfig({
             }
             if (id.includes('react-router-dom')) {
               return 'router-vendor';
-            }
-            if (id.includes('react-markdown') || id.includes('rehype') || id.includes('prism')) {
-              return 'markdown-vendor';
             }
             return 'vendor';
           }

@@ -1,14 +1,10 @@
 import express, { Router } from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import { authenticate, checkRole } from "../middleware/auth.middleware";
 import UploadController from "../controllers/uploads.controller";
 import { upload } from "../middleware/uploads.middleware";
 
 const router = Router();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 router.use(   "/",      express.static(path.join(__dirname, "../../public/uploads")));
 router.post(  "/",      authenticate, checkRole("admin"), upload.single("file"), UploadController.uploadFile);

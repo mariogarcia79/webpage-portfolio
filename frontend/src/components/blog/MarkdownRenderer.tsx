@@ -1,24 +1,8 @@
 import ReactMarkdown from "react-markdown";
 import rehypePrism from "rehype-prism-plus";
+import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 
-const defaultImgAttrs =
-  Array.isArray(defaultSchema.attributes?.img)
-    ? defaultSchema.attributes!.img
-    : [];
-
-const schema = {
-  ...defaultSchema,
-  attributes: {
-    ...defaultSchema.attributes,
-    img: [...defaultImgAttrs, "src", "alt"],
-  },
-  // Only allow safe src protocols for images
-  protocols: {
-    ...((defaultSchema as any).protocols || {}),
-    src: ["http", "https", "data"],
-  },
-};
 
 interface MarkdownProps {
   content: string;
@@ -27,8 +11,7 @@ interface MarkdownProps {
 export default function MarkdownRenderer({ content }: MarkdownProps) {
   return (
     <div className="prose">
-      {/* run syntax highlighting first, then sanitize output to ensure no unsafe content remains */}
-      <ReactMarkdown rehypePlugins={[rehypePrism, [rehypeSanitize, schema]]}>
+        <ReactMarkdown rehypePlugins={[rehypeRaw, [rehypeSanitize, defaultSchema], rehypePrism]}>
         {content}
       </ReactMarkdown>
     </div>

@@ -115,9 +115,15 @@ class PostController {
     }
 
     try {
-      const cleanTitle   = validateInput(req.body.title,   false, MAX_TITLE_LENGTH);
-      const cleanSummary = validateInput(req.body.summary, false, MAX_SUMMARY_LENGTH);
-      const cleanContent = validateInput(req.body.content, true,  MAX_CONTENT_LENGTH);
+      if (req.body.title !== undefined) {
+        body.title = validateInput(req.body.title, false, MAX_TITLE_LENGTH);
+      }
+      if (req.body.summary !== undefined) {
+        body.summary = validateInput(req.body.summary, false, MAX_SUMMARY_LENGTH);
+      }
+      if (req.body.content !== undefined) {
+        body.content = validateInput(req.body.content, true, MAX_CONTENT_LENGTH);
+      }
 
       const updatedPost = await PostService.patchPostById(id, body);
       
