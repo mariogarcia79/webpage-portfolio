@@ -8,7 +8,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const User_1 = __importDefault(require("../models/User"));
 async function createDefaultAdmin() {
     const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
-    const adminName = process.env.ADMIN_NAME || "admin";
+    const adminName = process.env.ADMIN_USERNAME || "admin";
     const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
     const existingAdmin = await User_1.default.findOne({ email: adminEmail });
     if (existingAdmin) {

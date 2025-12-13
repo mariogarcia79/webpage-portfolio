@@ -2,8 +2,10 @@ import bcrypt from "bcryptjs";
 import User from "../models/User";
 
 export async function createDefaultAdmin() {
+  // Support both ADMIN_NAME and ADMIN_USERNAME env var names (some setups use
+  // ADMIN_USERNAME). Also prefer ADMIN_EMAIL and ADMIN_PASSWORD from env.
   const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
-  const adminName = process.env.ADMIN_NAME || "admin";
+  const adminName = process.env.ADMIN_NAME || process.env.ADMIN_USERNAME || "admin";
   const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
 
   const existingAdmin = await User.findOne({ email: adminEmail });
