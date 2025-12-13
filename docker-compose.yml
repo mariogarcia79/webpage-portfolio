@@ -5,6 +5,10 @@ services:
     build: ./backend
     container_name: api-backend
     restart: unless-stopped
+    # Prefer loading runtime variables from a `.env` file at repo root.
+    # Ensure you place your ADMIN_EMAIL/ADMIN_NAME/ADMIN_PASSWORD in that file.
+    env_file:
+      - ./.env
     environment:
       - NODE_ENV=production
       - PORT=4000
