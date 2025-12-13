@@ -118,7 +118,7 @@ class AuthController {
         maxAge: 1000 * 60 * 60, // 1 hour
         secure: false,//process.env.NODE_ENV === "production", // require HTTPS in prod
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax",
       });
 
       return res.json({ 
