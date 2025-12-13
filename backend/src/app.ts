@@ -6,6 +6,9 @@ import routes from "./routes/index";
 
 const app = express();
 
+// Trust the first proxy (nginx) so req.protocol, secure, and IP forwarding work.
+app.set('trust proxy', 1);
+
 app.use(express.json());
 
 // Configure Content Security Policy. In development we allow Vite dev server
