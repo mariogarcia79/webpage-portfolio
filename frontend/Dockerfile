@@ -1,4 +1,4 @@
-FROM node:slim AS builder
+FROM node:20-trixie-slim AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # Production stage - serve with nginx
-FROM nginx:slim
+FROM nginx:20-trixie-slim
 
 # Copy built files to nginx html directory
 COPY --from=builder /app/dist /usr/share/nginx/html
