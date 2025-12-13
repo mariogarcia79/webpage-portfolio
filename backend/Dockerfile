@@ -1,22 +1,38 @@
-FROM node:20-trixie-slim
+FROM node:20-trixie-slim AS builder
 
 WORKDIR /app
-
-# This Dockerfile intentionally skips building TypeScript. It expects a
-# prebuilt `dist/` directory (compiled JS) to be present in the build context.
-# This is useful for low-RAM CI/VPS where running `tsc` inside the container
-# may fail or be slow. Build locally (or in CI) and then build the image on the
-# VPS.
 
 # Copy package files (including lockfile) for deterministic installs
 COPY package*.json ./
 COPY package-lock.json ./
+COPY tsconfig.json ./
 
-# Copy compiled output
-COPY dist ./dist
+# Install dev dependencies needed for the build
+RUN npm ci --prefer-offline --no-audit --no-fund
+
+# Copy source code
+COPY src ./src
+
+# Use a conservative memory cap for tsc to fit within small VPS RAM
+ENV NODE_OPTIONS=--max_old_space_size=512
+
+# Build TypeScript
+RUN node --max_old_space_size=512 ./node_modules/.bin/tsc
+
+# Production stage
+FROM node:20-trixie-slim
+
+WORKDIR /app
+
+# Copy package files and lockfile
+COPY package*.json ./
+COPY package-lock.json ./
 
 # Install only production dependencies
 RUN npm ci --omit=dev --prefer-offline --no-audit --no-fund
+
+# Copy built files from builder
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 4000
 
