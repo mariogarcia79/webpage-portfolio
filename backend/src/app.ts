@@ -56,9 +56,29 @@ app.use(
   })
 );
 
+// Configure CORS with a dynamic allowlist. In production set CORS_ORIGINS to
+// the exact origins you want to allow (comma-separated). In development we
+// allow common localhost dev server ports (Vite preview/dev server variants).
+const rawOrigins = process.env.CORS_ORIGINS;
+const defaultDevOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
+];
+const allowlist = rawOrigins
+  ? rawOrigins.split(',').map(s => s.trim()).filter(Boolean)
+  : (isDev ? defaultDevOrigins : ["'self'"]);
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (incomingOrigin, callback) {
+      // If no origin (same-origin request, curl, server-to-server), allow it
+      if (!incomingOrigin) return callback(null, true);
+      if (allowlist.includes(incomingOrigin)) return callback(null, true);
+      const msg = `Origin ${incomingOrigin} not allowed by CORS`;
+      return callback(new Error(msg), false);
+    },
     credentials: true,
   })
 );

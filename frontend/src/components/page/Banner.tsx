@@ -36,7 +36,7 @@ export default function Banner() {
             
             {/* Title */}
             <text x="300" y="62" fontFamily="'Courier New', monospace" fontSize="24" fontWeight="bold" fill="#ebf4ff" textAnchor="middle" letterSpacing="6">
-                STEALTH CRACKS
+                STEALTH DEBUG
             </text>
             
             {/* Clean separator line */}

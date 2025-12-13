@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>&copy; {currentYear} My Blog. All rights reserved.</p>
+        <p>&copy; {currentYear} Stealth Debug. All rights reserved.</p>
         <div className="footer-links">
           <a
             href="https://github.com/mariogarcia79/"
