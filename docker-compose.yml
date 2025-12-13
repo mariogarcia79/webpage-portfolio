@@ -14,7 +14,7 @@ services:
       - PORT=4000
       - MONGO_URL=mongodb://mongo:27017/webpage-portfolio
       # Allow CORS from your frontend origin(s). Comma-separated list.
-      - CORS_ORIGINS=http://82.165.142.94
+      - CORS_ORIGINS=http://stealthdebug.org,http://www.stealthdebug.org
     networks:
       - app-network
     # Only expose internally to Docker network
