@@ -106,7 +106,7 @@ services:
       - monitoring
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor
+    image: ghcr.io/google/cadvisor:latest
     container_name: cadvisor
     privileged: true
     devices:
