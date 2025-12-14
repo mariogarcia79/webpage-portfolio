@@ -102,6 +102,7 @@ services:
       - "9090"
     networks:
       - monitoring
+      - app-network
 
   cadvisor:
     image: ghcr.io/google/cadvisor:latest
@@ -116,7 +117,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     ports:
-      - 8070:8080
+      - "8070:8080"
     networks:
       - monitoring
 
