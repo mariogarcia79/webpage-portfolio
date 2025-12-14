@@ -69,6 +69,24 @@ services:
     networks:  
       - app-network  
 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.1
+    hostname: cadvisor
+    platform: linux/aarch64
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    ports:
+      - "8080:8080"
+  
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+
 networks:  
   app-network:  
     driver: bridge  
