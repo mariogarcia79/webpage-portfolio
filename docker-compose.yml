@@ -108,7 +108,10 @@ services:
 networks:  
   app-network:  
     driver: bridge  
+  monitoring:
+    driver: bridge
 
 volumes:  
   mongo-data:  
-    driver: local  
+    driver: local 
+  prometheus-data: {} 
