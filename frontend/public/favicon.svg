@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="lockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#47ebb4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0aa370;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="32" height="32" fill="#0d1318" rx="6"/>
+  
+  <!-- Lock shackle - left part with top (lifted up) -->
+  <path d="M9 11 L9 9 Q9 6 14 5.2 Q16 5 18 5.2 Q20 5.2 21.5 6" 
+        stroke="url(#lockGrad)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Lock shackle - right part -->
+  <path d="M21.5 7 Q23 6 23 9 L23 11" 
+        stroke="url(#lockGrad)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Crack line -->
+  <path d="M22 2 L20.8 3.5 L21.7 5 L20.2 6.8 L21.3 8.5 L19.5 10.5 L20.8 12.3 L18.7 14.5 L20.1 16.5 L17.8 18.8 L19.3 21 L16 23" 
+        stroke="#0d1318" stroke-width="3" fill="none" stroke-linecap="square" stroke-linejoin="miter"/>
+  
+  <!-- Lock body -->
+  <path d="M7 12 Q7 11 8 11 L24 11 Q25 11 25 12 L25 24 Q25 26 23 26 L9 26 Q7 26 7 24 Z" fill="url(#lockGrad)"/>
+  
+  <!-- Keyhole -->
+  <circle cx="16" cy="17" r="2" fill="#0d1318"/>
+  <rect x="14.5" y="18" width="3" height="4" rx="0.5" fill="#0d1318"/>
+  
+</svg>
