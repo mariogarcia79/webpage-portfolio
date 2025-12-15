@@ -110,6 +110,7 @@ services:
     privileged: true
     devices:
       - "/dev/kmsg:/dev/kmsg"
+    restart: unless-stopped
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
