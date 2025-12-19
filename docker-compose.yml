@@ -17,7 +17,7 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./public/uploads:/app/public/uploads
+      - ./public/backend/uploads:/app/public/uploads
 
   frontend:  
     build: ./frontend   

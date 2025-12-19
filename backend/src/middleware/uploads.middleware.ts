@@ -3,7 +3,7 @@ import path from "path";
 // import crypto from "crypto";
 
 // In CommonJS builds __dirname is available; use it to resolve the uploads directory
-const uploadDir = path.join(__dirname, "public", "uploads");
+const uploadDir = path.join(__dirname, "../../public/uploads");
 
 const allowedMimeTypes = new Set([
   "image/jpg",
