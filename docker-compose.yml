@@ -1,27 +1,26 @@
 services:  
-  backend:  
-    build: ./backend  
-    container_name: api-backend  
-    labels:  
-      - "monitoring.role=backend"  
-      - "monitoring.name=api-backend"  
-    restart: unless-stopped  
-    env_file:  
-      - ./backend/.env  
-    environment:  
-      - NODE_ENV=production  
-      - PORT=4000  
-      - MONGO_URL=mongodb://mongo:27017/webpage-portfolio  
-      - CORS_ORIGINS=https://stealthdebug.org,https://www.stealthdebug.org  
-    networks:  
-      - app-network  
-    expose:  
-      - "4000"  
-    depends_on:  
-      - mongo  
+  backend:
+    build: ./backend
+    container_name: api-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - MONGO_URL=mongodb://mongo:27017/webpage-portfolio
+      - CORS_ORIGINS=https://stealthdebug.org,https://www.stealthdebug.org
+    networks:
+      - app-network
+    expose:
+      - "4000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./public/uploads:/app/public/uploads
 
   frontend:  
-    build: ./frontend  
+    build: ./frontend   
     container_name: react-frontend  
     labels:  
       - "monitoring.role=frontend"  
@@ -31,7 +30,7 @@ services:
       - app-network  
     expose:  
       - "80"  
-
+ 
   nginx:  
     image: nginx:alpine  
     container_name: nginx-proxy
