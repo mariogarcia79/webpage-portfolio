@@ -6,6 +6,7 @@ import crypto from "crypto";
 const uploadDir = path.join(__dirname, "../../public/uploads");
 
 const allowedMimeTypes = new Set([
+  "image/jpg",
   "image/jpeg",
   "image/png",
   "image/gif",
@@ -18,10 +19,11 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     // generate a safe random filename and preserve a valid extension when possible
-    const ext = path.extname(file.originalname).toLowerCase();
-    const safeExt = [".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext) ? ext : "";
-    const random = crypto.randomBytes(8).toString("hex");
-    const name = `${Date.now()}-${random}${safeExt}`;
+    // const ext = path.extname(file.originalname).toLowerCase();
+    // const safeExt = [".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext) ? ext : "";
+    // const random = crypto.randomBytes(8).toString("hex");
+    // const name = `${Date.now()}-${random}${safeExt}`;
+    const name = file.originalname;
     cb(null, name);
   },
 });
