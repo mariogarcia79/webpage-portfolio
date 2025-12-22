@@ -1,4 +1,4 @@
-services:  
+services:
   backend:
     build: ./backend
     container_name: api-backend
@@ -18,53 +18,113 @@ services:
       - mongo
     volumes:
       - ./public/backend/uploads:/app/public/uploads
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 80M
+        reservations:
+          cpus: '0.1'
+          memory: 40M
+    mem_swappiness: 0
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
-  frontend:  
-    build: ./frontend   
-    container_name: react-frontend  
-    labels:  
-      - "monitoring.role=frontend"  
-      - "monitoring.name=react-frontend"  
-    restart: unless-stopped  
-    networks:  
-      - app-network  
-    expose:  
-      - "80"  
- 
-  nginx:  
-    image: nginx:alpine  
+  frontend:
+    build: ./frontend
+    container_name: react-frontend
+    labels:
+      - "monitoring.role=frontend"
+      - "monitoring.name=react-frontend"
+    restart: unless-stopped
+    networks:
+      - app-network
+    expose:
+      - "80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 20M
+        reservations:
+          cpus: '0.05'
+          memory: 10M
+    mem_swappiness: 0
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  nginx:
+    image: nginx:alpine
     container_name: nginx-proxy
-    labels:  
-      - "monitoring.role=proxy"  
-      - "monitoring.name=nginx-proxy"    
-    restart: unless-stopped  
-    ports:  
-      - "80:80"  
-      - "443:443"  
-    volumes:  
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  
-      - ./certs:/etc/nginx/certs:ro  
-    depends_on:  
-      - backend  
-      - frontend  
-    networks:  
-      - app-network  
+    labels:
+      - "monitoring.role=proxy"
+      - "monitoring.name=nginx-proxy"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.15'
+          memory: 30M
+        reservations:
+          cpus: '0.05'
+          memory: 15M
+    mem_swappiness: 0
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
-  mongo:  
-    image: mongo:6  
-    container_name: mongo-db  
-    labels:  
-      - "monitoring.role=database"  
-      - "monitoring.name=mongo-db"  
-    restart: unless-stopped  
-    environment:  
-      - MONGO_INITDB_DATABASE=webpage-portfolio  
-    volumes:  
-      - mongo-data:/data/db  
-    ports:  
-      - "27017:27017"  
-    networks:  
-      - app-network  
+  mongo:
+    image: mongo:6
+    container_name: mongo-db
+    labels:
+      - "monitoring.role=database"
+      - "monitoring.name=mongo-db"
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=webpage-portfolio
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 80M
+        reservations:
+          cpus: '0.15'
+          memory: 40M
+    mem_swappiness: 0
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -83,13 +143,28 @@ services:
       - "9100"
     networks:
       - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 150M
+        reservations:
+          cpus: '0.05'
+          memory: 20M
+    mem_swappiness: 60
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -97,11 +172,28 @@ services:
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.retention.size=100MB'
     expose:
       - "9090"
     networks:
       - monitoring
       - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 250M
+        reservations:
+          cpus: '0.1'
+          memory: 80M
+    mem_swappiness: 60
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
   cadvisor:
     image: ghcr.io/google/cadvisor:latest
@@ -120,14 +212,29 @@ services:
       - "8080"
     networks:
       - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 250M
+        reservations:
+          cpus: '0.1'
+          memory: 80M
+    mem_swappiness: 60
+    oom_kill_disable: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
-networks:  
-  app-network:  
-    driver: bridge  
+networks:
+  app-network:
+    driver: bridge
   monitoring:
     driver: bridge
 
-volumes:  
-  mongo-data:  
-    driver: local 
-  prometheus-data: {} 
+volumes:
+  mongo-data:
+    driver: local
+  prometheus-data: {}
