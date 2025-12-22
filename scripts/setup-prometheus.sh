@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-cd ../prometheus
+cd ../prometheus/
 
 USERNAME=$(sed -n '1p' prometheus.env)
 API_KEY=$(sed -n '2p' prometheus.env)
