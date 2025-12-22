@@ -15,7 +15,7 @@ scrape_configs:
     scrape_interval: 60s
     metric_relabel_configs:
       - source_labels: [__name__]
-        regex: 'container_(cpu_usage_seconds_total|memory_usage_bytes|network_receive_bytes_total|network_transmit_bytes_total)'
+        regex: 'container_(cpu_usage_seconds_total|memory_working_set_bytes|memory_max_usage_bytes|network_receive_bytes_total|network_transmit_bytes_total)'
         action: keep
 
   - job_name: 'node'
