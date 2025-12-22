@@ -1,4 +1,4 @@
-cd ../
+#!/usr/bin/bash
 
 # Setup everything needed for containers
 git pull

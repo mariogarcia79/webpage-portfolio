@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+
 docker system prune -a --volumes --exclude mongo-data
 docker volume rm prometheus-data
 #docker network prune -f
