@@ -3,11 +3,14 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import routes from "./routes/index";
+import compression from "compression";
 
 const app = express();
 
 // Trust the first proxy (nginx) so req.protocol, secure, and IP forwarding work.
 app.set('trust proxy', 1);
+
+app.use(compression());
 
 app.use(express.json());
 
