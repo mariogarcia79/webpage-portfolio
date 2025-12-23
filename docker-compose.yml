@@ -102,7 +102,7 @@ services:
     image: mongo:6
     container_name: mongo-db
     env_file:
-      - ./backend/.env  # To save mongo password if needed
+      - .env
     environment:
       MONGO_INITDB_DATABASE:      ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
