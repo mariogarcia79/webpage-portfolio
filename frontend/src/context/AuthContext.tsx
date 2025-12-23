@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const res = await fetch(`${API_BASE_URL}/auth/user`, {
         credentials: "include",
       });
-
+      if (!res.ok) return null;
       return await res.json();
     } catch (error) {
       return null;
