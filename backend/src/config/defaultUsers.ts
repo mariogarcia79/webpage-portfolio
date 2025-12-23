@@ -14,6 +14,7 @@ export async function createDefaultAdmin() {
   const anyAdmin = await User.findOne({ role: "admin" });
 
   // Update that admin's email, name and password.
+  /*
   if (anyAdmin) {
     console.log("An admin account already exists");
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
@@ -24,6 +25,7 @@ export async function createDefaultAdmin() {
     console.log("Existing admin updated to match .env (email/name/password).");
     return;
   }
+  */
 
   // No admin exists, create one
   const hashedPassword = await bcrypt.hash(adminPassword, 10);
