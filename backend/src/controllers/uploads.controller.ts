@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { isObjectId } from "../utils/validation";
-import { sendError } from "../config/errors";
 
 class UploadController {
   
   static async uploadFile(req: Request, res: Response): Promise<Response> {
     
     if (!req.file) {
-      return sendError(res, 'UPLOAD_ERROR');
+      return res
+        .status(400)
+        .json({ error: "No file uploaded" });
     }
     
     const uploadUrl = `/uploads/${req.file.filename}`;
@@ -22,7 +23,9 @@ class UploadController {
     const id = req.params.uploadUrl;
     
     if (!isObjectId(id)) {
-      return sendError(res, 'INVALID_INPUT');
+      return res
+        .status(400)
+        .json({ error: "Invalid upload url" });
     }
 
     return res
