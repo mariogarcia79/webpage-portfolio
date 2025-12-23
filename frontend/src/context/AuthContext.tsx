@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       return await res.json();
     } catch (error) {
-      console.warn("Could not fetch user:", error);
+      //console.warn("Could not fetch user:", error);
       return null;
     }
   }
