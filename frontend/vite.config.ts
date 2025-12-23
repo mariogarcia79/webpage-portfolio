@@ -2,9 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  // Serve built assets with relative paths so the app works when deployed
-  // from a sub-path or when files are served statically (e.g. GitHub Pages).
-  base: './',
+  base: '/',
   plugins: [react()],
   server: {
     port: 5173,
