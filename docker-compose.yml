@@ -17,9 +17,12 @@ services:
       - mongo
     volumes:
       - ./backend/public/uploads:/app/public/uploads
-    mem_limit: 80m
-    mem_reservation: 40m
     restart: unless-stopped
+    read_only: false  # Uploads need write access
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -33,9 +36,12 @@ services:
       - app-network
     expose:
       - "80"
-    mem_limit: 20m
-    mem_reservation: 10m
     restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -56,9 +62,12 @@ services:
       - frontend
     networks:
       - app-network
-    mem_limit: 30m
-    mem_reservation: 15m
     restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -68,6 +77,8 @@ services:
   mongo:
     image: mongo:6
     container_name: mongo-db
+    env_file:
+      - ./backend/.env  # To save mongo password if needed
     environment:
       MONGO_INITDB_DATABASE: webpage-portfolio
     volumes:
@@ -76,9 +87,12 @@ services:
       - "27017:27017"
     networks:
       - app-network
-    mem_limit: 80m
-    mem_reservation: 40m
     restart: unless-stopped
+    read_only: false
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -102,9 +116,12 @@ services:
       - "9100"
     networks:
       - monitoring
-    mem_limit: 150m
-    mem_reservation: 20m
     restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -115,7 +132,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -130,9 +147,12 @@ services:
     networks:
       - monitoring
       - app-network
-    mem_limit: 250m
-    mem_reservation: 80m
     restart: unless-stopped
+    read_only: false  # Needs write access for data storage
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
@@ -162,9 +182,12 @@ services:
       - "8080"
     networks:
       - monitoring
-    mem_limit: 250m
-    mem_reservation: 80m
     restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     logging:
       driver: "json-file"
       options:
