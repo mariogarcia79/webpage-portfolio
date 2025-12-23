@@ -1,14 +1,17 @@
 import mongoose from 'mongoose';
 
-const DEFAULT_DB = 'webpage-portfolio';
-const mongoHost = process.env.MONGO_HOST || 'mongo';
-const mongoPort = process.env.MONGO_PORT || '27017';
+const DEFAULT_DB  = 'webpage-portfolio';
+const mongoHost   = process.env.MONGO_HOST    || 'mongo';
+const mongoPort   = process.env.MONGO_PORT    || '27017';
 const mongoDbName = process.env.MONGO_DB_NAME || DEFAULT_DB;
-const mongoUrl = process.env.MONGO_URL || `mongodb://${mongoHost}:${mongoPort}/${mongoDbName}`;
+// TODO: Include username/password auth in the connection string if provided via env vars
+const mongoUrl    = process.env.MONGO_URL     || `mongodb://${mongoHost}:${mongoPort}/${mongoDbName}`;
 
 export const connectDB = async (): Promise<void> => {
-  const maxAttempts = process.env.DB_CONNECT_MAX_ATTEMPTS ? parseInt(process.env.DB_CONNECT_MAX_ATTEMPTS, 10) : 0; // 0 = unlimited
-  const retryDelay = process.env.DB_CONNECT_RETRY_DELAY_MS ? parseInt(process.env.DB_CONNECT_RETRY_DELAY_MS, 10) : 3000;
+  const maxAttempts = process.env.DB_CONNECT_MAX_ATTEMPTS ? 
+    parseInt(process.env.DB_CONNECT_MAX_ATTEMPTS, 10) : 0; // 0 = unlimited
+  const retryDelay = process.env.DB_CONNECT_RETRY_DELAY_MS ? 
+    parseInt(process.env.DB_CONNECT_RETRY_DELAY_MS, 10) : 3000;
 
   let attempt = 0;
   while (true) {
