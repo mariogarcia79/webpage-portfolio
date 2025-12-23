@@ -19,17 +19,9 @@ services:
       - mongo
     volumes:
       - ./backend/public/uploads:/app/public/uploads
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 80M
-        reservations:
-          cpus: '0.1'
-          memory: 40M
-        mem_swappiness: 0
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 80m
+    mem_reservation: 40m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -43,17 +35,9 @@ services:
       - app-network
     expose:
       - "80"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 20M
-        reservations:
-          cpus: '0.05'
-          memory: 10M
-        mem_swappiness: 0
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 20m
+    mem_reservation: 10m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -74,17 +58,9 @@ services:
       - frontend
     networks:
       - app-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.15'
-          memory: 30M
-        reservations:
-          cpus: '0.05'
-          memory: 15M
-        mem_swappiness: 0
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 30m
+    mem_reservation: 15m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -102,17 +78,9 @@ services:
       - "27017:27017"
     networks:
       - app-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.3'
-          memory: 80M
-        reservations:
-          cpus: '0.15'
-          memory: 40M
-        mem_swappiness: 0
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 80m
+    mem_reservation: 40m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -136,17 +104,9 @@ services:
       - "9100"
     networks:
       - monitoring
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 150M
-        reservations:
-          cpus: '0.05'
-          memory: 20M
-        mem_swappiness: 60
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 150m
+    mem_reservation: 20m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -172,17 +132,9 @@ services:
     networks:
       - monitoring
       - app-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 250M
-        reservations:
-          cpus: '0.1'
-          memory: 80M
-        mem_swappiness: 60
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 250m
+    mem_reservation: 80m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -212,17 +164,9 @@ services:
       - "8080"
     networks:
       - monitoring
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 250M
-        reservations:
-          cpus: '0.1'
-          memory: 80M
-        mem_swappiness: 60
-      restart_policy:
-        condition: unless-stopped
+    mem_limit: 250m
+    mem_reservation: 80m
+    restart: unless-stopped
     logging:
       driver: "json-file"
       options:
