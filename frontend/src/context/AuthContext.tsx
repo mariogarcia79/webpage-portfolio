@@ -30,9 +30,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const res = await fetch(`${API_BASE_URL}/auth/user`, {
         credentials: "include",
       });
-      if (!res.ok) return null;
-      const data: User = await res.json();
-      return data;
+
+      return await res.json();
     } catch (error) {
       console.warn("Could not fetch user:", error);
       return null;
@@ -76,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setIsLoggedIn(true);
         }
       })
-      //.catch(() => {})
+      .catch(() => {})
       .finally(() => setIsLoading(false));
   }, []);
 
