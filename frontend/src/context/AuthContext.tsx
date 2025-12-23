@@ -25,20 +25,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  async function getUser(): Promise<User> {
+  async function getUser(): Promise<User | null> {
     const res = await fetch(`${API_BASE_URL}/auth/user`, {
       credentials: "include",
     });
 
-    if (!res.ok) return Promise.reject('Failed to fetch user');
-    return res.json();
+    if (res.ok)
+      return res.json();
+    return null;
   }
 
   const login = async () => {
     try {
       const user = await getUser();
-      setUserId(user._id);
-      setRole(user.role);
+      setUserId(user?._id || null);
+      setRole(user?.role || null);
       setIsLoggedIn(true);
     } catch (error) {
       console.error('Login failed:', error);
@@ -65,9 +66,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     getUser()
       .then((user) => {
-        setUserId(user._id);
-        setRole(user.role);
-        setIsLoggedIn(true);
+        if (user) {
+          setUserId(user._id);
+          setRole(user.role);
+          setIsLoggedIn(true);
+        }
       })
       .catch(() => {})
       .finally(() => setIsLoading(false));
