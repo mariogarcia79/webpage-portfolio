@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:4000'
     }
-  }
+  }/*
   ,
   build: {
     // Increase warning threshold slightly to avoid noisy warnings while
@@ -34,5 +34,5 @@ export default defineConfig({
         }
       }
     }
-  }
+  }*/
 });
