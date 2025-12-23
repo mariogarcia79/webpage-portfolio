@@ -1,15 +1,16 @@
+version: "3.9"
+
 services:
   backend:
     build: ./backend
     container_name: api-backend
-    restart: unless-stopped
     env_file:
       - ./backend/.env
     environment:
-      - NODE_ENV=production
-      - PORT=4000
-      - MONGO_URL=mongodb://mongo:27017/webpage-portfolio
-      - CORS_ORIGINS=https://stealthdebug.org,https://www.stealthdebug.org
+      NODE_ENV: production
+      PORT: 4000
+      MONGO_URL: mongodb://mongo:27017/webpage-portfolio
+      CORS_ORIGINS: https://stealthdebug.org,https://www.stealthdebug.org
     networks:
       - app-network
     expose:
@@ -26,8 +27,9 @@ services:
         reservations:
           cpus: '0.1'
           memory: 40M
-    mem_swappiness: 0
-    oom_kill_disable: false
+        mem_swappiness: 0
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -37,10 +39,6 @@ services:
   frontend:
     build: ./frontend
     container_name: react-frontend
-    labels:
-      - "monitoring.role=frontend"
-      - "monitoring.name=react-frontend"
-    restart: unless-stopped
     networks:
       - app-network
     expose:
@@ -53,8 +51,9 @@ services:
         reservations:
           cpus: '0.05'
           memory: 10M
-    mem_swappiness: 0
-    oom_kill_disable: false
+        mem_swappiness: 0
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -64,10 +63,6 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx-proxy
-    labels:
-      - "monitoring.role=proxy"
-      - "monitoring.name=nginx-proxy"
-    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -87,8 +82,9 @@ services:
         reservations:
           cpus: '0.05'
           memory: 15M
-    mem_swappiness: 0
-    oom_kill_disable: false
+        mem_swappiness: 0
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -98,12 +94,8 @@ services:
   mongo:
     image: mongo:6
     container_name: mongo-db
-    labels:
-      - "monitoring.role=database"
-      - "monitoring.name=mongo-db"
-    restart: unless-stopped
     environment:
-      - MONGO_INITDB_DATABASE=webpage-portfolio
+      MONGO_INITDB_DATABASE: webpage-portfolio
     volumes:
       - mongo-data:/data/db
     ports:
@@ -118,8 +110,9 @@ services:
         reservations:
           cpus: '0.15'
           memory: 40M
-    mem_swappiness: 0
-    oom_kill_disable: false
+        mem_swappiness: 0
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -129,7 +122,7 @@ services:
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
-    restart: unless-stopped
+    privileged: true
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -151,8 +144,9 @@ services:
         reservations:
           cpus: '0.05'
           memory: 20M
-    mem_swappiness: 60
-    oom_kill_disable: false
+        mem_swappiness: 60
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -162,7 +156,6 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
@@ -187,8 +180,9 @@ services:
         reservations:
           cpus: '0.1'
           memory: 80M
-    mem_swappiness: 60
-    oom_kill_disable: false
+        mem_swappiness: 60
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
@@ -201,7 +195,6 @@ services:
     privileged: true
     devices:
       - "/dev/kmsg:/dev/kmsg"
-    restart: unless-stopped
     volumes:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
@@ -227,8 +220,9 @@ services:
         reservations:
           cpus: '0.1'
           memory: 80M
-    mem_swappiness: 60
-    oom_kill_disable: false
+        mem_swappiness: 60
+      restart_policy:
+        condition: unless-stopped
     logging:
       driver: "json-file"
       options:
