@@ -71,10 +71,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
-
-        <Footer />
+        </Routes>  
       </main>
+      <Footer />
     </Router>
   );
 }
