@@ -25,12 +25,7 @@ class PostController {
       return res.json(posts);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: getAllPosts",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
