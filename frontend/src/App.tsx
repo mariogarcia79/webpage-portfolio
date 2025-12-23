@@ -20,14 +20,11 @@ function App() {
 
       <main className="page-container">
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/blog" element={<BlogList />} />
-          <Route path="/blog/:id" element={<BlogPost />} />
 
-          {/* Protected Routes for Admin */}
           <Route
             path="/blog/new"
             element={
@@ -36,6 +33,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/blog/edit/:id"
             element={
@@ -44,6 +42,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/blog/:id" element={<BlogPost />} />
 
           <Route
             path="/users"
@@ -54,7 +54,6 @@ function App() {
             }
           />
 
-          {/* Protected Route for any logged-in user */}
           <Route
             path="/dashboard"
             element={
@@ -72,7 +71,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
         </Routes>
 
         <Footer />
