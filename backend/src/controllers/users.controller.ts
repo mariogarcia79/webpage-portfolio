@@ -10,6 +10,7 @@ import {
 import { UserRole } from "../types/userRole";
 import { IUser } from "../types/user";
 import { FilterQuery } from "mongoose";
+import { sendError } from "../config/errors";
 
 class UserController {
   
@@ -29,9 +30,7 @@ class UserController {
       
       if (queryRole && ![UserRole.ADMIN, UserRole.USER]
           .includes(queryRole as UserRole)) {
-        return res
-          .status(400)
-          .json({ error: "Invalid role filter" });
+        return sendError(res, 'INVALID_INPUT');
       }
       
       if (queryRole) {
@@ -41,37 +40,26 @@ class UserController {
       const users = await UserService.getAllUsers({ sorted: true, filter });
       return res.json(users);
     } catch (error: unknown) {
-      console.error(
-        error instanceof Error ? error : "Unknown error");
-      return res
-        .status(500)
-        .json({
-          message: "Error: getAllUsers:",
-          error: (error as Error)?.message
-          });
+      console.error(error instanceof Error ? error : "Unknown error");
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
   
   static async getUserById(req: Request, res: Response): Promise<Response> {
     const id = req.params.id;
-    if (!isObjectId(id)) return res.status(400).json({ error: 'Invalid user ID' });
+    if (!isObjectId(id)) return sendError(res, 'INVALID_USER_ID');
     
     try {            
       const user = await UserService.getUserById(id);
 
       if (!user) {
-        return res
-          .status(404)
-          .json({ error: "User not found" });
+        return sendError(res, 'USER_NOT_FOUND');
       }
       
       return res.json(user);
     } catch (error: unknown) {
       console.error(error instanceof Error ? error : "Unknown error");
-      return res.status(500).json({ 
-        message: "Error: getUserById:",
-        error: (error as Error)?.message
-      });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
   
@@ -80,16 +68,12 @@ class UserController {
     const body: Partial<IUser> = {};
       
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: 'Invalid user ID' });
+      return sendError(res, 'INVALID_USER_ID');
     }
     
     if (req.body.role && ![UserRole.ADMIN, UserRole.USER]
         .includes(req.body.role as UserRole)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid role" });
+      return sendError(res, 'INVALID_INPUT');
     }
 
     try {
@@ -109,19 +93,13 @@ class UserController {
 
       const updatedUser = await UserService.patchUserById(id, body);
       if (!updatedUser) {
-        return res
-          .status(404)
-          .json({ error: "User not found" });
+        return sendError(res, 'USER_NOT_FOUND');
       }
       
       return res.json(updatedUser);
     } catch (error: unknown) {
       console.error(error instanceof Error ? error : "Unknown error");
-      return res
-        .status(500)
-        .json({
-          message: "Error: patchUserById:",
-          error: (error as Error)?.message });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
   
@@ -130,7 +108,7 @@ class UserController {
     const { currentPassword, newPassword } = req.body;
      
     if (!isObjectId(id)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
+      return sendError(res, 'INVALID_USER_ID');
     }
     
     try {
@@ -140,37 +118,26 @@ class UserController {
         .updateUserPassword(id, currentPassword, cleanPassword);
       
       if (!isUpdated) {
-        return res
-          .status(400)
-          .json({ error: 'Invalid current password or user not found' });
+        return sendError(res, 'INCORRECT_PASSWORD');
       }
       
       return res.json({ message: 'Password updated successfully' });
     } catch (error: unknown) {
       console.error(error instanceof Error ? error : "Unknown error");
-      return res
-        .status(500)
-        .json({
-          message: 'Error: updateUserPassword',
-          error: (error as Error)?.message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
   
   static async deleteUserById(req: Request, res: Response): Promise<Response> {
     const id = req.params.id;
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: 'Invalid user ID' });
+      return sendError(res, 'INVALID_USER_ID');
     }
 
     try {  
       const isDeleted = await UserService.deleteUserById(id);
       if (!isDeleted) {
-        return res
-          .status(404)
-          .json({ error: "User not found" });
+        return sendError(res, 'USER_NOT_FOUND');
       }
       
       return res
@@ -178,12 +145,7 @@ class UserController {
         .send();
     } catch (error: unknown) {
       console.error(error instanceof Error ? error : "Unknown error");
-      return res
-        .status(500)
-        .json({
-          message: "Error: deleteUserById:",
-          error: (error as Error)?.message 
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 }

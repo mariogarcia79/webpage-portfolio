@@ -8,6 +8,7 @@ import {
   validateInput,
   isObjectId
 } from "../utils/validation";
+import { sendError } from "../config/errors";
 
 import {
   MAX_TITLE_LENGTH,
@@ -36,28 +37,19 @@ class PostController {
   static async getPostById(req: Request, res: Response): Promise<Response> {
     const id = req.params.id;
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
 
     try {
       const post = await PostService.getPostById(id);
       if (!post) {
-        return res
-          .status(404)
-          .json({ error: "Post not found" });
+        return sendError(res, 'POST_NOT_FOUND');
       }
       return res.json(post);
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: getPostById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -66,9 +58,7 @@ class PostController {
     const { title, summary, content } = req.body;
 
     if (!isObjectId(_id)) {
-      return res
-        .status(401)
-        .json({ error: "Invalid or missing post" });
+      return sendError(res, 'UNAUTHORIZED');
     }
 
     try {
@@ -84,9 +74,7 @@ class PostController {
       });
 
       if (!newPost) {
-        return res
-          .status(500)
-          .json({ error: "Failed to create post" });
+        return sendError(res, 'FAILED_CREATE_POST');
       }
 
       return res
@@ -95,12 +83,7 @@ class PostController {
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: createPost",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -109,9 +92,7 @@ class PostController {
     const body: Partial<IPost> = {};
 
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
 
     try {
@@ -127,17 +108,12 @@ class PostController {
 
       const updatedPost = await PostService.patchPostById(id, body);
       
-      if (!updatedPost) return res.status(404).json({ error: "Post not found" });
+      if (!updatedPost) return sendError(res, 'POST_NOT_FOUND');
 
       return res.json(updatedPost);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: patchPostById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -145,30 +121,21 @@ class PostController {
     const id = req.params.id;
 
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
 
     try {
       const deleted = await PostService.deletePostById(id);
     
       if (!deleted) {
-        return res
-          .status(404)
-          .json({ error: "Post not found" });
+        return sendError(res, 'POST_NOT_FOUND');
       }
       return res
         .status(204)
         .send();
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: deletePostById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 }

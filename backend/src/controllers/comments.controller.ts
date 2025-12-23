@@ -9,6 +9,7 @@ import {
   validateInput,
   isObjectId
 } from "../utils/validation";
+import { sendError } from "../config/errors";
 
 
 class CommentController {
@@ -17,9 +18,7 @@ class CommentController {
     const postId = req.params.postId;
 
     if (!isObjectId(postId)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
 
     try {
@@ -31,12 +30,7 @@ class CommentController {
       return res.json(comments);
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: getAllComments",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -44,36 +38,25 @@ class CommentController {
     const { postId, id } = req.params;
 
     if (!isObjectId(postId)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
     
     if (!isObjectId(id)) { 
-      return res
-        .status(400)
-        .json({ error: "Invalid comment ID" });
+      return sendError(res, 'INVALID_COMMENT_ID');
     }
 
     try {
       const comment = await CommentService.getCommentById(id);
 
       if (!comment || comment.post.toString() !== postId) {
-        return res
-          .status(404)
-          .json({ error: "Comment not found in this post" });
+        return sendError(res, 'COMMENT_NOT_FOUND');
       }
 
       return res.json(comment);
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: getCommentById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -83,15 +66,11 @@ class CommentController {
     const { content } = req.body;
 
     if (!isObjectId(userId)) {
-      return res
-        .status(401)
-        .json({ error: "Invalid or missing author" });
+      return sendError(res, 'UNAUTHORIZED');
     }
 
     if (!isObjectId(postId)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid or missing post" });
+      return sendError(res, 'INVALID_POST');
     }
 
     try {
@@ -104,9 +83,7 @@ class CommentController {
       });
 
       if (!newComment) {
-        return res
-          .status(500)
-          .json({ error: "Failed to create comment" });
+        return sendError(res, 'FAILED_CREATE_COMMENT');
       }
 
       return res
@@ -115,12 +92,7 @@ class CommentController {
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: createComment",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -129,15 +101,11 @@ class CommentController {
     const body: Partial<IComment> = {};
     
     if (!isObjectId(postId)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
     
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid comment ID" });
+      return sendError(res, 'INVALID_COMMENT_ID');
     }
 
     if (req.body.content !== undefined) {
@@ -154,9 +122,7 @@ class CommentController {
       const comment = await CommentService.getCommentById(id);
 
       if (!comment || comment.post.toString() !== postId) {
-        return res
-          .status(404)
-          .json({ error: "Comment not found in this post" });
+        return sendError(res, 'COMMENT_NOT_FOUND');
       }
 
       const updatedComment = await CommentService.patchCommentById(id, body);
@@ -164,12 +130,7 @@ class CommentController {
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: patchCommentById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -177,24 +138,18 @@ class CommentController {
     const { postId, id } = req.params;
 
     if (!isObjectId(postId)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid post ID" });
+      return sendError(res, 'INVALID_POST_ID');
     }
     
     if (!isObjectId(id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid comment ID" });
+      return sendError(res, 'INVALID_COMMENT_ID');
     }
 
     try {
       const comment = await CommentService.getCommentById(id);
 
       if (!comment || comment.post.toString() !== postId) {
-        return res
-          .status(404)
-          .json({ error: "Comment not found in this post" });
+        return sendError(res, 'COMMENT_NOT_FOUND');
       }
 
       await CommentService.deleteCommentById(id);
@@ -205,12 +160,7 @@ class CommentController {
 
     } catch (err) {
       console.error(err);
-      return res
-        .status(500)
-        .json({
-          message: "Error: deleteCommentById",
-          error: (err as Error).message
-        });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 }

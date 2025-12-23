@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserService from "../services/users.service";
 import jwt from "jsonwebtoken";
+import { ERRORS, sendError } from "../config/errors";
 
 const secret = process.env.JWT_SECRET || "default_secret";
 
@@ -13,9 +14,7 @@ export const authenticate = async (
   const token = req.cookies.jwt;
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ error: "Missing authentication token" });
+    return sendError(res, 'MISSING_AUTH_TOKEN');
   }
 
   try {
@@ -27,9 +26,7 @@ export const authenticate = async (
 
     const user = await UserService.getUserById(decoded._id);
     if (!user) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorized: user not found" });
+      return sendError(res, 'USER_NOT_FOUND');
     }
 
     req.user = {
@@ -40,24 +37,18 @@ export const authenticate = async (
     
     next();
   } catch (err) {
-    return res
-      .status(401)
-      .json({ error: "Invalid or expired token" });
+    return sendError(res, 'INVALID_TOKEN');
   }
 };
 
 export const checkRole = (...allowedRoles: ("admin" | "user")[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorized" });
+      return sendError(res, 'UNAUTHORIZED');
     }
 
     if (!allowedRoles.includes(req.user.role)) {
-      return res
-        .status(403)
-        .json({ error: "Forbidden: insufficient permissions" });
+      return sendError(res, 'FORBIDDEN');
     }
 
     next();
@@ -71,9 +62,7 @@ export const validateUserId = (
 ) => {
 
   if (!req.user) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized" });
+    return sendError(res, 'UNAUTHORIZED');
   }
 
   const routeUserId = req.params.id;
@@ -83,7 +72,5 @@ export const validateUserId = (
     return next();
   }
 
-  return res
-    .status(403)
-    .json({ error: "Forbidden: you cannot access this resource" });
+  return sendError(res, 'FORBIDDEN');
 };

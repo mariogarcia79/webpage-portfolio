@@ -10,6 +10,7 @@ import {
 
 import AuthService from "../services/auth.service";
 import UserService from "../services/users.service";
+import { ERRORS, sendError } from "../config/errors";
 
 
 const secret = process.env.JWT_SECRET || "default_secret";
@@ -33,9 +34,7 @@ class AuthController {
       });
 
       if (!newUser) {
-        return res
-          .status(400)
-          .json( { error: "User could not be created" });
+        return sendError(res, 'BAD_REQUEST');
       }
 
       return res
@@ -45,7 +44,7 @@ class AuthController {
     } catch (err: unknown) {
       if (err instanceof Error)
         return res.status(400).json({ error: err.message });
-      return res.status(400).json({ error: "Unknown signup error" });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
@@ -65,9 +64,7 @@ class AuthController {
       });
 
       if (!newUser) {
-        return res
-          .status(400)
-          .json( { error: "User could not be created" });
+        return sendError(res, 'BAD_REQUEST');
       }
 
       return res
@@ -77,7 +74,7 @@ class AuthController {
     } catch (err: unknown) {
       if (err instanceof Error)
         return res.status(400).json({ error: err.message });
-      return res.status(400).json({ error: "Unknown signup error" });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
   
@@ -91,17 +88,13 @@ class AuthController {
       const user = await UserService.getUserByName(cleanName);
       
       if (!user) {
-        return res
-          .status(400)
-          .json({ error: "User not found" });
+        return sendError(res, 'USER_NOT_FOUND');
       }
 
       const isMatch = await bcrypt.compare(cleanPassword, user.hash);
 
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ error: "Incorrect password" });
+        return sendError(res, 'INCORRECT_PASSWORD');
       }
       
       const token = jwt.sign(
@@ -133,22 +126,19 @@ class AuthController {
 
     } catch (err: unknown) {
       console.error(err);
-      if (err instanceof Error) {
-        return res.status(500).json({ error: err.message });
-      }
-      return res.status(500).json({ error: "Unknown error" });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
   static async getUserInfo(req: Request, res: Response): Promise<Response> {
     try {
       if (!req.user) {
-        return res.status(401).json({ error: "Unauthorized" });
+        return sendError(res, 'UNAUTHORIZED');
       }
 
       const user = await UserService.getUserById(req.user._id);
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        return sendError(res, 'USER_NOT_FOUND');
       }
 
       return res.json({
@@ -158,10 +148,7 @@ class AuthController {
         role: user.role
       });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        return res.status(500).json({ error: err.message });
-      }
-      return res.status(500).json({ error: "Unknown error" });
+      return sendError(res, 'UNKNOWN_ERROR');
     }
   }
 
