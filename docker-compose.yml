@@ -44,6 +44,7 @@ services:
       - ALL
     cap_add:
       - CHOWN
+      - SETGID
     logging:
       driver: "json-file"
       options:
@@ -72,6 +73,7 @@ services:
       - ALL
     cap_add:
       - CHOWN
+      - SETGID
     logging:
       driver: "json-file"
       options:
