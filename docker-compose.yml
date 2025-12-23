@@ -207,4 +207,5 @@ networks:
 volumes:
   mongo-data:
     driver: local
-  prometheus-data: {}
+  prometheus-data:
+    driver: local

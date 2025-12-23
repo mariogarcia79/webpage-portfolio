@@ -3,7 +3,6 @@ import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
 
-//__dirname
 const uploadDir = path.join(process.cwd(), "public/uploads");
 
 const allowedMimeTypes = new Set([
@@ -32,37 +31,29 @@ function isAsciiOnly(str: string): boolean {
   return /^[\x00-\x7F]*$/.test(str);
 }
 
-function sanitizeFilename(filename: string): string {
-  const sanitized = filename
-    .replace(/[^a-zA-Z0-9._-]/g, "_")
-    .replace(/\.{2,}/g, "_")
-    .replace(/^\.+/, "")
-    .slice(0, 200);
-  return sanitized;
-}
-
 async function validateImageFile(filePath: string): Promise<boolean> {
   try {
     const metadata = await sharp(filePath).metadata();
     
-    if (!metadata.width || !metadata.height) {
-      return false;
-    }
-
-    if (!metadata.format || !allowedFormats.includes(metadata.format)) {
-      return false;
-    }
-
+    if (!metadata.width || !metadata.height) return false;
+    if (!metadata.format || !allowedFormats.includes(metadata.format)) return false;
     const maxDimension = 10000;
-    if (metadata.width > maxDimension || metadata.height > maxDimension) {
-      return false;
-    }
+    if (metadata.width > maxDimension || metadata.height > maxDimension) return false;
 
     return true;
   } catch (error) {
     console.error("Error validating image:", error);
     return false;
   }
+}
+
+function randomString(length = 6): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
 const storage = multer.diskStorage({
@@ -76,29 +67,21 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     try {
-      const originalName = file.originalname;
-      
-      if (!isAsciiOnly(originalName)) {
-        return cb(new Error("Filename must contain only ASCII characters"), "");
-      }
-      
-      if (originalName.startsWith(".")) {
-        return cb(new Error("Filename cannot start with a dot"), "");
-      }
+      const ext = path.extname(file.originalname).toLowerCase();
 
-      const ext = path.extname(originalName).toLowerCase();
       if (!allowedExtensions.has(ext)) {
         return cb(new Error("File extension not allowed"), "");
       }
 
-      const sanitized = sanitizeFilename(originalName);
-      const finalExt = path.extname(sanitized).toLowerCase();
-      
-      if (!allowedExtensions.has(finalExt)) {
-        return cb(new Error("Invalid filename after sanitization"), "");
+      if (!isAsciiOnly(file.originalname)) {
+        return cb(new Error("Filename must contain only ASCII characters"), "");
       }
 
-      cb(null, sanitized);
+      const timestamp = Date.now();
+      const randomStr = randomString(20);
+      const finalName = `${timestamp}-${randomStr}${ext}`;
+
+      cb(null, finalName);
     } catch (error) {
       cb(error as Error, "");
     }
@@ -136,9 +119,7 @@ export async function validateUploadedImage(
   res: any,
   next: any
 ) {
-  if (!req.file) {
-    return next();
-  }
+  if (!req.file) return next();
 
   const filePath = req.file.path;
 
@@ -154,12 +135,7 @@ export async function validateUploadedImage(
 
     next();
   } catch (error) {
-    try {
-      await fs.unlink(filePath);
-    } catch {}
-    
-    return res.status(500).json({ 
-      error: "Error validating image" 
-    });
+    try { await fs.unlink(filePath); } catch {}
+    return res.status(500).json({ error: "Error validating image" });
   }
 }
