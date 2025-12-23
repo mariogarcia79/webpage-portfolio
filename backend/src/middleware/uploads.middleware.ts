@@ -3,7 +3,8 @@ import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
 
-const uploadDir = path.join(process.cwd(), "../../public/uploads");
+//__dirname
+const uploadDir = path.join(process.cwd(), "public/uploads");
 
 const allowedMimeTypes = new Set([
   "image/jpeg",
