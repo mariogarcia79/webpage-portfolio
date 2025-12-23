@@ -4,8 +4,9 @@ const DEFAULT_DB  = 'webpage-portfolio';
 const mongoHost   = process.env.MONGO_HOST    || 'mongo';
 const mongoPort   = process.env.MONGO_PORT    || '27017';
 const mongoDbName = process.env.MONGO_DB_NAME || DEFAULT_DB;
-// TODO: Include username/password auth in the connection string if provided via env vars
-const mongoUrl    = process.env.MONGO_URL     || `mongodb://${mongoHost}:${mongoPort}/${mongoDbName}`;
+const mongoUser   = process.env.MONGO_INITDB_ROOT_USERNAME;
+const mongoPass   = process.env.MONGO_INITDB_ROOT_PASSWORD;
+const mongoUrl    = process.env.MONGO_URL     || `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}/${mongoDbName}`;
 
 export const connectDB = async (): Promise<void> => {
   const maxAttempts = process.env.DB_CONNECT_MAX_ATTEMPTS ? 

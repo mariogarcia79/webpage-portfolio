@@ -3,12 +3,29 @@ services:
     build: ./backend
     container_name: api-backend
     env_file:
-      - ./backend/.env
+      - .env
     environment:
-      NODE_ENV: production
-      PORT: 4000
-      MONGO_URL: mongodb://mongo:27017/webpage-portfolio
-      CORS_ORIGINS: https://stealthdebug.org,https://www.stealthdebug.org
+      BACKEND_NODE_ENV:     ${BACKEND_NODE_ENV}
+      BACKEND_PORT:         ${BACKEND_PORT}
+      BACKEND_MONGO_URI:    ${BACKEND_MONGO_URI}
+      BACKEND_JWT_SECRET:   ${BACKEND_JWT_SECRET}
+      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS}
+
+      BACKEND_ADMIN_EMAIL:  ${BACKEND_ADMIN_EMAIL}
+      BACKEND_ADMIN_NAME:   ${BACKEND_ADMIN_NAME}
+      BACKEND_ADMIN_PASSWORD: ${BACKEND_ADMIN_PASSWORD}
+
+      BACKEND_MIN_NAME_LENGTH:    ${BACKEND_MIN_NAME_LENGTH}
+      BACKEND_MAX_NAME_LENGTH:    ${BACKEND_MAX_NAME_LENGTH}
+      BACKEND_MIN_EMAIL_LENGTH:   ${BACKEND_MIN_EMAIL_LENGTH}
+      BACKEND_MAX_EMAIL_LENGTH:   ${BACKEND_MAX_EMAIL_LENGTH}
+      BACKEND_MIN_PASSWORD_LENGTH: ${BACKEND_MIN_PASSWORD_LENGTH}
+      BACKEND_MAX_PASSWORD_LENGTH: ${BACKEND_MAX_PASSWORD_LENGTH}
+      
+      BACKEND_MAX_TITLE_LENGTH:    ${BACKEND_MAX_TITLE_LENGTH}
+      BACKEND_MAX_SUMMARY_LENGTH:  ${BACKEND_MAX_SUMMARY_LENGTH}
+      BACKEND_MAX_CONTENT_LENGTH:  ${BACKEND_MAX_CONTENT_LENGTH}
+      BACKEND_MAX_COMMENT_LENGTH:  ${BACKEND_MAX_COMMENT_LENGTH}
     networks:
       - app-network
     expose:
@@ -89,6 +106,9 @@ services:
       - ./backend/.env  # To save mongo password if needed
     environment:
       MONGO_INITDB_DATABASE: webpage-portfolio
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    command: ["mongod", "--auth"]
     volumes:
       - mongo-data:/data/db
     ports:
