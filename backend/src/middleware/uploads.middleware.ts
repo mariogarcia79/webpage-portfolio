@@ -78,8 +78,8 @@ const storage = multer.diskStorage({
       }
 
       const timestamp = Date.now();
-      const randomStr = randomString(20);
-      const finalName = `${timestamp}-${randomStr}${ext}`;
+      const randomStr = randomString(6);
+      const finalName = `${file.originalname}-${timestamp}-${randomStr}${ext}`;
 
       cb(null, finalName);
     } catch (error) {
