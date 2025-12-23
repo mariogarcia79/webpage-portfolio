@@ -14,8 +14,6 @@ export const authenticate = async (
   const token = req.cookies.jwt;
 
   if (!token) {
-    if (req.path.includes("/auth/user"))
-      return res.json(null);
     return sendError(res, 'MISSING_AUTH_TOKEN');
   }
 
