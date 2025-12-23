@@ -31,9 +31,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         credentials: "include",
       });
 
-      if (res.status === 401) return null; // no loggeado
-      if (!res.ok) throw new Error("Error fetching user");
-
       return await res.json();
     } catch (error) {
       //console.warn("Could not fetch user:", error);

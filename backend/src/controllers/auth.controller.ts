@@ -133,7 +133,7 @@ class AuthController {
   static async getUserInfo(req: Request, res: Response): Promise<Response> {
     try {
       if (!req.user) {
-        return sendError(res, 'UNAUTHORIZED');
+        return res.json(null);
       }
 
       const user = await UserService.getUserById(req.user._id);
