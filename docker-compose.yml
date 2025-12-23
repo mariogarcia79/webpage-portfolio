@@ -22,7 +22,7 @@ services:
     security_opt:
       - no-new-privileges:true
     cap_drop:
-      - ALL
+      - NET_RAW
     logging:
       driver: "json-file"
       options:
