@@ -26,15 +26,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   async function getUser(): Promise<User | null> {
-    const res = await fetch(`${API_BASE_URL}/auth/user`, {
-      credentials: "include",
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/user`, {
+        credentials: "include",
+      });
 
-    if (res.status === 401) {
-      return null; // no loggeado
+      if (res.status === 401) return null; // no loggeado
+      if (!res.ok) throw new Error("Error fetching user");
+
+      return await res.json();
+    } catch (error) {
+      console.warn("Could not fetch user:", error);
+      return null;
     }
-
-    return res.json();
   }
 
   const login = async () => {
