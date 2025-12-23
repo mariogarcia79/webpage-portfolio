@@ -61,8 +61,8 @@ function BlogEditor() {
   // Uploads
   const handleFileUpload = async (file: File) => {
     try {
-      await UploadAPI.uploadFile(file);
-      const url = `${API_BASE_URL}/uploads/${file.name}`;
+      const uploadUrl = await UploadAPI.uploadFile(file);
+      const url = `${API_BASE_URL}/${uploadUrl}`;
       setUploadedFiles(prev => [...prev, url]);
     } catch (err) {
       console.error("Upload error:", err);
