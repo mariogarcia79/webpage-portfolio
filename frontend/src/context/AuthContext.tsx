@@ -30,9 +30,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       credentials: "include",
     });
 
-    if (res.ok)
-      return res.json();
-    return null;
+    if (res.status === 401) {
+      return null; // no loggeado
+    }
+
+    return res.json();
   }
 
   const login = async () => {
