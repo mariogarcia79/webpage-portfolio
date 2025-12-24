@@ -188,7 +188,8 @@ services:
     devices:
       - "/dev/kmsg:/dev/kmsg"
     volumes:
-      - /var/run:/var/run:ro
+      - /run/user/$(id -u)/:/var/run/:ro
+      #- /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     command:
