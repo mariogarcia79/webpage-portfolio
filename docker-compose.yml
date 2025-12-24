@@ -181,28 +181,13 @@ services:
         max-size: "5m"
         max-file: "2"
 
-  cadvisor:
-    image: ghcr.io/google/cadvisor:latest
-    container_name: cadvisor
-    privileged: true
-    devices:
-      - "/dev/kmsg:/dev/kmsg"
+  docker-stats-exporter:
+    image: wywywywy/docker_stats_exporter
+    container_name: docker-stats-exporter
     volumes:
-      - /run/user/${USER_UID}/:/var/run/:ro
-      #- /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    command:
-      - '--housekeeping_interval=30s'
-      - '--max_housekeeping_interval=35s'
-      - '--event_storage_event_limit=default=0'
-      - '--event_storage_age_limit=default=0'
-      - '--docker_only=true'
-      - '--disable_metrics=disk,diskIO,tcp,udp,percpu,sched,process,hugetlb,referenced_memory,cpu_topology,resctrl'
-      - '--store_container_labels=false'
-      - '--allow_dynamic_housekeeping=false'
+      - /run/user/${USER_UID}/docker.sock:/var/run/docker.sock:ro
     expose:
-      - "8080"
+      - "9487"
     networks:
       - monitoring
     restart: unless-stopped
@@ -216,6 +201,7 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
+
 
 networks:
   app-network:

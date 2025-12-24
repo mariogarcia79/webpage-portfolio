@@ -9,13 +9,13 @@ scrape_configs:
       - targets: ['localhost:9090']
     scrape_interval: 120s
 
-  - job_name: 'cadvisor'
+  - job_name: 'docker-stats'
     static_configs:
-      - targets: ['cadvisor:8080']
+      - targets: ['docker-stats-exporter:9487']
     scrape_interval: 60s
     metric_relabel_configs:
       - source_labels: [__name__]
-        regex: 'container_(cpu_usage_seconds_total|memory_working_set_bytes|memory_max_usage_bytes|network_receive_bytes_total|network_transmit_bytes_total)'
+        regex: 'docker_container_(cpu_usage_percent|memory_usage_bytes|memory_limit_bytes|net_rx_bytes|net_tx_bytes)'
         action: keep
 
   - job_name: 'node'
