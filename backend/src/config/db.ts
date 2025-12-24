@@ -6,7 +6,7 @@ const mongoPort   = process.env.MONGO_PORT    || '27017';
 const mongoDbName = process.env.MONGO_DB_NAME || DEFAULT_DB;
 const mongoUser   = process.env.MONGO_INITDB_ROOT_USERNAME;
 const mongoPass   = process.env.MONGO_INITDB_ROOT_PASSWORD;
-const mongoUrl    = process.env.MONGO_URL     || `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}/${mongoDbName}`;
+const mongoUrl    = process.env.MONGO_URI     || `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}/${mongoDbName}`;
 
 export const connectDB = async (): Promise<void> => {
   const maxAttempts = process.env.DB_CONNECT_MAX_ATTEMPTS ? 
