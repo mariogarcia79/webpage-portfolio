@@ -34,9 +34,9 @@ remote_write:
       password: REDACTED
     queue_config:
       capacity: 10000
-      max_shards: 5
+      max_shards: 2
       min_shards: 1
-      max_samples_per_send: 2000
+      max_samples_per_send: 5000
       batch_send_deadline: 5m
       min_backoff: 30s
       max_backoff: 5m
