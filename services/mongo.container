@@ -7,6 +7,7 @@ Image=docker.io/library/mongo:6
 ContainerName=mongo-db
 EnvironmentFile=%h/.config/containers/env/mongo.env
 Volume=mongo-data.volume:/data/db
+Volume=%h/.config/containers/mongo/init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
 PublishPort=27017:27017
 Network=app.network
 
