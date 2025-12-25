@@ -5,9 +5,8 @@ After=network-online.target
 [Container]
 Image=localhost/frontend:latest
 ContainerName=react-frontend
-Expose=80
+PublishPort=80
 Network=app.network
-SecurityLabelDisable=false
 
 [Service]
 TimeoutStartSec=900
