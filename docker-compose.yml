@@ -3,6 +3,7 @@ version: "3.9"
 services:
   backend:
     build: ./backend
+    image: local/api-backend:latest
     container_name: api-backend
     env_file:
       - .env
@@ -49,6 +50,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: local/react-frontend:latest
     container_name: react-frontend
     networks:
       - app-network
