@@ -6,8 +6,8 @@ Requires=backend.service frontend.service
 [Container]
 Image=docker.io/library/nginx:alpine
 ContainerName=nginx-proxy
-Volume=%h/.config/containers/storage/nginx/nginx.conf:/etc/nginx/nginx.conf:ro,Z
-Volume=%h/.config/containers/storage/certs:/etc/nginx/certs:ro,Z
+Volume=%h/.config/containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro,Z
+Volume=%h/.config/containers/certs:/etc/nginx/certs:ro,Z
 PublishPort=80:80
 PublishPort=443:443
 Network=app.network
