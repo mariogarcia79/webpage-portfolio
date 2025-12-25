@@ -1,7 +1,0 @@
-[Unit]
-Description=Prometheus Data Volume
-
-[Volume]
-
-[Install]
-WantedBy=default.target

@@ -1,8 +1,0 @@
-[Unit]
-Description=Monitoring Network
-
-[Network]
-Driver=bridge
-
-[Install]
-WantedBy=default.target
