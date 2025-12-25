@@ -1,4 +1,8 @@
-FROM node:20-alpine AS builder
+# Frontend Dockerfile - Fixed for Podman
+# File: sources/frontend/Dockerfile
+
+# Build stage - Use fully qualified image name
+FROM docker.io/library/node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -18,8 +22,8 @@ ENV NODE_OPTIONS=--max_old_space_size=512
 # Build the app (creates dist directory)
 RUN npm run build
 
-# Production stage - serve with nginx
-FROM nginx:alpine
+# Production stage - Use fully qualified image name
+FROM docker.io/library/nginx:alpine
 
 # Copy built files to nginx html directory
 COPY --from=builder /app/dist /usr/share/nginx/html
