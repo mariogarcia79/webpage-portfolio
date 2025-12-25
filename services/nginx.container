@@ -11,14 +11,8 @@ Volume=%h/.config/containers/storage/certs:/etc/nginx/certs:ro,Z
 PublishPort=80:80
 PublishPort=443:443
 Network=app.network
-SecurityLabelDisable=false
-NoNewPrivileges=true
-DropCapability=ALL
-AddCapability=CHOWN SETGID SETUID
-LogDriver=journald
 
 [Service]
-Restart=unless-stopped
 TimeoutStartSec=900
 
 [Install]

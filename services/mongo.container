@@ -9,11 +9,8 @@ EnvironmentFile=%h/.config/containers/env/.env
 Volume=mongo-data.volume:/data/db
 PublishPort=27017:27017
 Network=app.network
-LogDriver=journald
-SecurityLabelDisable=false
 
 [Service]
-Restart=unless-stopped
 TimeoutStartSec=900
 
 [Install]

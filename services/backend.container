@@ -8,13 +8,10 @@ Image=localhost/backend:latest
 ContainerName=api-backend
 EnvironmentFile=%h/.config/containers/env/backend.env
 Volume=backend-uploads.volume:/app/public/uploads:Z
-Expose=4000
+PublishPort=4000:4000
 Network=app.network
-NoNewPrivileges=true
-DropCapability=NET_RAW
 
 [Service]
-Restart=unless-stopped
 TimeoutStartSec=900
 
 [Install]
