@@ -6,14 +6,12 @@ Requires=mongo.service
 [Container]
 Image=localhost/backend:latest
 ContainerName=api-backend
-EnvironmentFile=%h/.config/containers/env/.env
-Volume=%h/local/share/containers/storage/volumes/backend/public/uploads:/app/public/uploads
+EnvironmentFile=%h/.config/containers/env/backend.env
+Volume=backend-uploads.volume:/app/public/uploads:Z
 Expose=4000
 Network=app.network
-SecurityLabelDisable=false
 NoNewPrivileges=true
 DropCapability=NET_RAW
-LogDriver=journald
 
 [Service]
 Restart=unless-stopped
