@@ -4,7 +4,7 @@ After=network-online.target
 
 [Container]
 Image=docker.io/library/mongo:6
-ContainerName=mongo-db
+ContainerName=mongo
 EnvironmentFile=%h/.config/containers/env/mongo.env
 Volume=mongo-data.volume:/data/db
 Volume=%h/.config/containers/mongo/init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro

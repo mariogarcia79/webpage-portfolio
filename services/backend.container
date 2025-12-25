@@ -5,7 +5,7 @@ Requires=mongo.service
 
 [Container]
 Image=localhost/backend:latest
-ContainerName=api-backend
+ContainerName=backend
 EnvironmentFile=%h/.config/containers/env/backend.env
 Volume=backend-uploads.volume:/app/public/uploads:Z
 PublishPort=4000:4000

@@ -4,7 +4,7 @@ After=network-online.target
 
 [Container]
 Image=localhost/frontend:latest
-ContainerName=react-frontend
+ContainerName=frontend
 PublishPort=80
 Network=app.network
 
