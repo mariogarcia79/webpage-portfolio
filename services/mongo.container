@@ -1,6 +1,6 @@
 [Unit]
 Description=MongoDB Database
-After=network.target
+After=network-online.target
 
 [Container]
 Image=docker.io/library/mongo:6

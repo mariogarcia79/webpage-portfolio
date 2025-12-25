@@ -1,6 +1,6 @@
 [Unit]
 Description=React Frontend Service
-After=network.target
+After=network-online.target
 
 [Container]
 Image=localhost/frontend:latest
