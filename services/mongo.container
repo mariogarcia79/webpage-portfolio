@@ -5,10 +5,10 @@ After=network.target
 [Container]
 Image=docker.io/library/mongo:6
 ContainerName=mongo-db
-EnvironmentFile=%E/.env
+EnvironmentFile=%h/containers/.env
 Volume=mongo-data.volume:/data/db
 PublishPort=27017:27017
-Network=app-network.network
+Network=app.network
 LogDriver=journald
 SecurityLabelDisable=false
 
