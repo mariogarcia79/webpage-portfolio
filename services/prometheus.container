@@ -1,0 +1,31 @@
+[Unit]
+Description=Prometheus Monitoring
+After=node-exporter.service
+Requires=node-exporter.service
+
+[Container]
+Image=docker.io/prom/prometheus:latest
+ContainerName=prometheus
+Volume=./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro,Z
+Volume=prometheus-data.volume:/prometheus
+Exec= \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/prometheus \
+    --web.console.libraries=/etc/prometheus/console_libraries \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.enable-lifecycle --storage.tsdb.retention.time=7d \
+    --storage.tsdb.retention.size=100MB
+Expose=9090
+Network=monitoring.network
+Network=app-network.network
+SecurityLabelDisable=false
+NoNewPrivileges=true
+DropCapability=ALL
+LogDriver=journald
+
+[Service]
+Restart=unless-stopped
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

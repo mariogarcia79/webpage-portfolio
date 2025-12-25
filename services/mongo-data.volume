@@ -1,0 +1,7 @@
+[Unit]
+Description=MongoDB Data Volume
+
+[Volume]
+
+[Install]
+WantedBy=default.target

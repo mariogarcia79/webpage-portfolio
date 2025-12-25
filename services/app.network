@@ -1,0 +1,8 @@
+[Unit]
+Description=Application Network
+
+[Network]
+Driver=bridge
+
+[Install]
+WantedBy=default.target

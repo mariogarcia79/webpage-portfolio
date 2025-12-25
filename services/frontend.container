@@ -1,0 +1,21 @@
+[Unit]
+Description=React Frontend Service
+After=network.target
+
+[Container]
+Image=localhost/frontend:latest
+ContainerName=react-frontend
+Expose=80
+Network=app-network.network
+SecurityLabelDisable=false
+NoNewPrivileges=true
+DropCapability=ALL
+AddCapability=CHOWN SETGID SETUID
+LogDriver=journald
+
+[Service]
+Restart=unless-stopped
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
