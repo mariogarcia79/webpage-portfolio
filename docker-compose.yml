@@ -181,28 +181,6 @@ services:
         max-size: "5m"
         max-file: "2"
 
-  docker-stats-exporter:
-    image: wywywywy/docker_stats_exporter
-    container_name: docker-stats-exporter
-    volumes:
-      - /run/user/${USER_UID}/docker.sock:/var/run/docker.sock:ro
-    expose:
-      - "9487"
-    networks:
-      - monitoring
-    restart: unless-stopped
-    read_only: true
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "2"
-
-
 networks:
   app-network:
     driver: bridge
