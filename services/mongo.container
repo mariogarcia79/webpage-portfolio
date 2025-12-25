@@ -5,7 +5,7 @@ After=network-online.target
 [Container]
 Image=docker.io/library/mongo:6
 ContainerName=mongo-db
-EnvironmentFile=%h/containers/.env
+EnvironmentFile=%h/.config/containers/env/.env
 Volume=mongo-data.volume:/data/db
 PublishPort=27017:27017
 Network=app.network
