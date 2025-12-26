@@ -5,6 +5,7 @@ Requires=backend.service frontend.service
 
 [Container]
 Image=docker.io/library/nginx:alpine
+Pod=webpage.pod
 ContainerName=nginx
 Volume=%h/.config/containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro,Z
 Volume=%h/.config/containers/certs:/etc/nginx/certs:ro,Z
