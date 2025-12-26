@@ -19,7 +19,7 @@ export const connectDB = async (): Promise<void> => {
     attempt++;
     try {
       await mongoose.connect(mongoUrl);
-      console.log(`Connected to MongoDB: ${mongoUrl} (attempt ${attempt})`);
+      console.log(`Connected to MongoDB (attempt ${attempt})`);
       break;
     } catch (error: any) {
       console.error(`MongoDB connection attempt ${attempt} failed:`, error.message || error);
