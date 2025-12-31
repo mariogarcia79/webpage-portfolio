@@ -69,9 +69,9 @@ podman build -t frontend:latest ./frontend/
 echo "Built frontend container image."
 
 # launch the webpage pod
-systemctl --user restart webpage-pod.pod
+systemctl --user restart webpage-pod.service
 echo "Launched webpage pod."
 
 # check status of the webpage pod
-systemctl --user status webpage-pod.pod --no-pager
+systemctl --user status webpage-pod.service --no-pager
 echo "Checked status of webpage pod."
