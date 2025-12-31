@@ -19,6 +19,7 @@ echo "Updated source code from git."
 # assign appropiate permissions
 mkdir -p /home/deploy/.config/containers/certs
 mkdir -p /home/deploy/.config/containers/mongo
+mkdir -p /home/deploy/.config/containers/nginx
 mkdir -p /home/deploy/.config/containers/env
 mkdir -p /home/deploy/.config/containers/systemd
 ln -s /home/deploy/.config/containers/systemd /home/deploy/.config/systemd/user
