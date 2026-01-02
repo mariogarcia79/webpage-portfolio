@@ -10,6 +10,7 @@ import UserDashboard from './components/user/UserDashboard';
 import UserList from './components/user/UserList';
 import { ProtectedRoute } from './components/page/ProtectedRoute';
 import Footer from './components/page/Footer';
+import NotFound from './components/error/NotFound';
 
 function App() {
   return (
@@ -71,6 +72,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* Fallback route for 404 Not Found */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <Footer />
