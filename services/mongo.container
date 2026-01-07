@@ -3,7 +3,7 @@ Description=MongoDB Database
 After=network-online.target
 
 [Container]
-Image=docker.io/library/mongo:6
+Image=docker.io/library/mongo:latest
 Pod=webpage.pod
 ContainerName=mongo
 EnvironmentFile=%h/.config/containers/env/mongo.env
