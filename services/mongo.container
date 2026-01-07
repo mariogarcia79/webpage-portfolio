@@ -15,8 +15,6 @@ Exec=mongod --wiredTigerCacheSizeGB 0.25
 
 [Service]
 TimeoutStartSec=900
-Restart=on-failure
-RestartSec=2
 
 [Install]
 WantedBy=default.target
