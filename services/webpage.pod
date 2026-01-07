@@ -6,3 +6,8 @@ After=network-online.target
 [Pod]
 PodName=webpage
 Network=app.network
+
+[Service]
+TimeoutStartSec=900
+Restart=on-failure
+RestartSec=2

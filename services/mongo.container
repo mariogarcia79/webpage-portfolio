@@ -11,13 +11,12 @@ Volume=mongo-data.volume:/data/db
 Volume=%h/.config/containers/mongo/init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
 PublishPort=27017:27017
 Network=app.network
-
 Exec=mongod --wiredTigerCacheSizeGB 0.25
 
 [Service]
 TimeoutStartSec=900
-Restart=always
-RestartSec=5
+Restart=on-failure
+RestartSec=2
 
 [Install]
 WantedBy=default.target
