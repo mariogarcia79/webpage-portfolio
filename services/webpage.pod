@@ -8,5 +8,5 @@ PodName=webpage
 Network=app.network
 
 [Service]
-Restart=on-failure
+Restart=always
 RestartSec=2
