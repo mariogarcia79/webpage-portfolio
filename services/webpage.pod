@@ -6,7 +6,3 @@ After=network-online.target
 [Pod]
 PodName=webpage
 Network=app.network
-
-[Service]
-Restart=always
-RestartSec=2
