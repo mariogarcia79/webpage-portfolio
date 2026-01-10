@@ -22,7 +22,7 @@ mkdir -p /home/deploy/.config/containers/mongo
 mkdir -p /home/deploy/.config/containers/nginx
 mkdir -p /home/deploy/.config/containers/env
 mkdir -p /home/deploy/.config/containers/systemd
-ln -s /home/deploy/.config/containers/systemd /home/deploy/.config/systemd/user
+ln -s /home/deploy/.config/containers/systemd /home/deploy/.config/systemd/user/
 chmod -R 700 /home/deploy/.config/containers
 chmod -R 700 /home/deploy/.config/systemd/user
 echo "Created directory structure under ~/.config/containers and ~/.config/systemd/user."
