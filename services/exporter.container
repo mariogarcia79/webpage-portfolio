@@ -4,14 +4,14 @@ After=network-online.target
 
 [Container]
 Image=quay.io/navidys/prometheus-podman-exporter
-Pod=webpage.pod
-ContainerName=frontend
+Pod=observability.pod
+ContainerName=exporter
 UserNS=keep-id:uid=65534 
 SecurityLabelDisable=true
 Environment=CONTAINER_HOST=unix:///run/podman/podman.sock
 Volume=$XDG_RUNTIME_DIR/podman/podman.sock:/run/podman/podman.sock
 PublishPort=9882:9882
-Network=app.network
+Network=observability.network
 
 [Service]
 TimeoutStartSec=900
