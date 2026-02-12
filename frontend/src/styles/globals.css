@@ -78,11 +78,23 @@ html, body {
   width: 100%;
   min-height: 100%;
   font-family: 'Roboto Mono', monospace;
-  font-size: 12px;
+  font-size: 14px;
   background-color: var(--color-dark-0);
   color: var(--color-text-0);
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px; /* portátil */
+  }
+}
+
+@media (min-width: 1200px) {
+  html {
+    font-size: 18px; /* pantallas grandes */
+  }
 }
 
 /* Scrollbar styling */
