@@ -602,7 +602,6 @@ html, body {
   flex-direction: column;
   gap: 1.2rem;
   line-height: 1.6;
-  font-size: 100px;
 }
 
 /* TITULOS */
@@ -667,7 +666,7 @@ html, body {
   overflow-x: auto;
   color: var(--color-text-0);
   border: 0;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .prose pre code {
@@ -773,7 +772,7 @@ html, body {
 }
 
 .footer-links .link {
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-decoration: none;
   color: var(--color-text-1, #ccc);
 }
@@ -810,7 +809,7 @@ html, body {
   margin-top: 51px;
   padding: 1rem;
   height: flex;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 .editor-sidebar h3 {
@@ -846,7 +845,7 @@ html, body {
 
 .char-counter {
   text-align: right;
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin-top: -5px;
   margin-bottom: 10px;
   color: #666;
@@ -948,7 +947,7 @@ html, body {
 .user-actions .button {
   width: auto;
   padding: 0.3rem 0.7rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* RESPONSIVO */
