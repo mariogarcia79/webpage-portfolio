@@ -86,12 +86,14 @@ html, body {
 }
 
 @media (min-width: 768px) {
+  p,
   html {
     font-size: 14px; /* portátil */
   }
 }
 
 @media (min-width: 1200px) {
+  p,
   html {
     font-size: 16px; /* pantallas grandes */
   }
