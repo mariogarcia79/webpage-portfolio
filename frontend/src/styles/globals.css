@@ -604,14 +604,14 @@ html, body {
   margin-bottom: 0.8rem;
 }
 
-.prose h1 { font-size: 2rem; }
-.prose h2 { font-size: 1.7rem; }
-.prose h3 { font-size: 1.4rem; }
+.prose h1 { font-size: 1.7rem; }
+.prose h2 { font-size: 1.4rem; }
+.prose h3 { font-size: 1.2rem; }
 
 /* PÁRRAFOS */
 .prose p {
   color: var(--color-text-0);
-  font-size: 1rem;
+  font-size: 0.5rem;
   white-space: normal;
   overflow-wrap: break-word;
 }
