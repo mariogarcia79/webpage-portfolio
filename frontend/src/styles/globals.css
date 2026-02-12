@@ -202,14 +202,14 @@ html, body {
    TITLES
 ============================================ */
 .title {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight: bold;
   text-align: left;
   color: var(--color-text-0);
 }
 
 .title.large {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .title.left {
@@ -223,7 +223,7 @@ html, body {
 .textarea {
   width: 100%;
   padding: 0.8rem 1rem;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   background-color: var(--color-dark-0);
   color: var(--color-text-0);
   border: 1px solid var(--color-text-0);
@@ -293,7 +293,7 @@ html, body {
 .button {
   width: 100%;
   padding: 0.8rem 1rem;
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: bold;
   font-family: 'Roboto Mono', monospace;
   background-color: var(--color-accent-general);
@@ -373,7 +373,7 @@ html, body {
 }
 
 .post-title {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: bold;
   color: var(--color-accent-general);
   text-decoration: none;
@@ -384,7 +384,7 @@ html, body {
 }
 
 .post-date {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: bold;
   color: var(--color-text-0);
   text-decoration: none;
@@ -450,14 +450,14 @@ html, body {
 }
 
 .comment-author {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: bold;
   color: var(--color-accent-general);
   text-decoration: none;
 }
 
 .comment-date {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-style: italic;
   color: var(--color-text-1);
   text-decoration: none;
@@ -485,7 +485,7 @@ html, body {
   color: var(--color-accent-general);
   font-weight: bold;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
 }
 
 .error.block {
@@ -604,14 +604,14 @@ html, body {
   margin-bottom: 0.8rem;
 }
 
-.prose h1 { font-size: 1.7rem; }
-.prose h2 { font-size: 1.4rem; }
-.prose h3 { font-size: 1.2rem; }
+.prose h1 { font-size: 1.5rem; }
+.prose h2 { font-size: 1.2rem; }
+.prose h3 { font-size: 1rem; }
 
 /* PÁRRAFOS */
 .prose p {
   color: var(--color-text-0);
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   white-space: normal;
   overflow-wrap: break-word;
 }
@@ -642,7 +642,7 @@ html, body {
   border-radius: 4px;
   border: 0;
   color: var(--color-accent-code);
-  font-size: 0.9rem;
+  font-size: 0.6rem;
 }
 
 /* BLOQUES DE CÓDIGO */
@@ -664,7 +664,7 @@ html, body {
 .prose img {
   max-width: 100%;
   border-radius: 6px;
-  border: 1px solid var(--color-text-1);
+  border: 0px solid var(--color-text-1);
 }
 
 /* LINKS */
@@ -746,7 +746,7 @@ html, body {
 
 .footer-content p {
   color: var(--color-text-1, #ccc);
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   margin: 0;
 }
 
@@ -758,7 +758,7 @@ html, body {
 }
 
 .footer-links .link {
-  font-size: 0.9rem;
+  font-size: 0.6rem;
   text-decoration: none;
   color: var(--color-text-1, #ccc);
 }
@@ -795,13 +795,13 @@ html, body {
   margin-top: 51px;
   padding: 1rem;
   height: flex;
-  font-size: 0.85rem;
+  font-size: 0.6rem;
 }
 
 .editor-sidebar h3 {
   color: var(--color-accent-general);
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.7rem;
 }
 
 .file-list {
@@ -831,7 +831,7 @@ html, body {
 
 .char-counter {
   text-align: right;
-  font-size: 0.85rem;
+  font-size: 0.6rem;
   margin-top: -5px;
   margin-bottom: 10px;
   color: #666;
@@ -868,7 +868,7 @@ html, body {
   background-color: var(--color-dark-1);
   color: var(--color-text-1);
   font-weight: bold;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   border-bottom: 1px solid var(--color-subtle-general);
   white-space: nowrap;
   overflow: hidden;
@@ -881,7 +881,7 @@ html, body {
   grid-template-columns: 1.5fr 3fr 2fr 6fr;
   padding: 0.8rem 1rem;
   background-color: var(--color-dark-0);
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   transition: background-color 0.2s ease;
   align-items: center;
   color: var(--color-text-0);
@@ -933,7 +933,7 @@ html, body {
 .user-actions .button {
   width: auto;
   padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
+  font-size: 0.6rem;
 }
 
 /* RESPONSIVO */
