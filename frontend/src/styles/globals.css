@@ -666,7 +666,7 @@ html, body {
   overflow-x: auto;
   color: var(--color-text-0);
   border: 0;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .prose pre code {
