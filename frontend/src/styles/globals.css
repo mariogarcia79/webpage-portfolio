@@ -78,7 +78,7 @@ html, body {
   width: 100%;
   min-height: 100%;
   font-family: 'Roboto Mono', monospace;
-  font-size: 14px;
+  font-size: 12px;
   background-color: var(--color-dark-0);
   color: var(--color-text-0);
   overflow-x: hidden;
@@ -87,13 +87,13 @@ html, body {
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px; /* portátil */
+    font-size: 14px; /* portátil */
   }
 }
 
 @media (min-width: 1200px) {
   html {
-    font-size: 18px; /* pantallas grandes */
+    font-size: 16px; /* pantallas grandes */
   }
 }
 
