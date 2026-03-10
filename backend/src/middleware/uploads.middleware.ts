@@ -2,203 +2,105 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import sharp from "sharp";
+import { Request, Response, NextFunction } from "express";
 
 const uploadDir = path.join(process.cwd(), "public/uploads");
 
 const allowedMimeTypes = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "image/webp",
+  "image/jpeg", "image/png", "image/gif", "image/webp"
 ]);
 
 const allowedExtensions = new Set([
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".gif",
-  ".webp"
+  ".jpg", ".jpeg", ".png", ".gif", ".webp"
 ]);
 
-const allowedFormats = [
-  "jpeg",
-  "png",
-  "gif",
-  "webp"
-];
+const allowedFormats = ["jpeg","png","gif","webp"];
 
-function isAsciiOnly(str: string): boolean {
-  return /^[\x00-\x7F]*$/.test(str);
+function randomString(len = 6) {
+  return Array.from({length: len}, () =>
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+      .charAt(Math.floor(Math.random()*62))
+  ).join("");
 }
 
-function randomString(length = 6): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+function isAsciiOnly(str: string) {
+  return /^[\x00-\x7F]+$/.test(str);
 }
 
-async function validateImageFile(filePath: string): Promise<boolean> {
+async function validateImageFile(filePath: string) {
   try {
-    const metadata = await sharp(filePath).metadata();
-
-    if (!metadata.width || !metadata.height) return false;
-    if (!metadata.format || !allowedFormats.includes(metadata.format)) return false;
-
-    const maxDimension = 10000;
-    if (metadata.width > maxDimension || metadata.height > maxDimension) return false;
-
-    // protección contra image bombs
-    const maxPixels = 40_000_000;
-    if ((metadata.width * metadata.height) > maxPixels) return false;
-
+    const { width, height, format } = await sharp(filePath).metadata();
+    if (!width || !height || !format || !allowedFormats.includes(format)) return false;
+    if (width > 10000 || height > 10000 || width*height > 40_000_000) return false;
     return true;
-
-  } catch (error) {
-    console.error("Error validating image:", error);
+  } catch {
     return false;
   }
 }
 
-async function sanitizeAndConvertToWebp(filePath: string): Promise<string> {
-  const parsed = path.parse(filePath);
-  const newPath = path.join(parsed.dir, `${parsed.name}.webp`);
+async function sanitizeAndConvertToWebp(filePath: string) {
+  const { dir, name } = path.parse(filePath);
+  const newPath = path.join(dir, `${name}.webp`);
 
   await sharp(filePath)
-    .rotate() // respeta orientación pero elimina EXIF
-    .webp({
-      quality: 82,
-      effort: 4
-    })
+    .rotate()
+    .webp({ quality: 82, effort: 4 })
     .toFile(newPath);
 
-  if (newPath !== filePath) {
-    await fs.unlink(filePath);
-  }
-
+  await fs.unlink(filePath);
   return newPath;
 }
 
 const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    try {
-      await fs.mkdir(uploadDir, { recursive: true });
-      cb(null, uploadDir);
-    } catch (error) {
-      cb(error as Error, uploadDir);
-    }
+  destination: async (_, __, cb) => {
+    await fs.mkdir(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
+  filename: (_, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!allowedExtensions.has(ext) || !isAsciiOnly(file.originalname))
+      return cb(new Error("Invalid file"), "");
 
-  filename: (req, file, cb) => {
-    try {
-
-      const ext = path.extname(file.originalname).toLowerCase();
-
-      if (!allowedExtensions.has(ext)) {
-        return cb(new Error("File extension not allowed"), "");
-      }
-
-      if (!isAsciiOnly(file.originalname)) {
-        return cb(new Error("Filename must contain only ASCII characters"), "");
-      }
-
-      const baseName = file.originalname
-        .toLowerCase()
-        .replace(ext, "")
-        .replace(/[^a-z0-9-_]/g, "-");
-
-      const timestamp = Date.now();
-      const randomStr = randomString(6);
-
-      const finalName = `${baseName}-${timestamp}-${randomStr}${ext}`;
-
-      cb(null, finalName);
-
-    } catch (error) {
-      cb(error as Error, "");
-    }
+    const base = file.originalname.toLowerCase().replace(ext,"").replace(/[^a-z0-9-_]/g,"-");
+    const finalName = `${base}-${Date.now()}-${randomString(6)}${ext}`;
+    cb(null, finalName);
   },
 });
 
 export const upload = multer({
-
   storage,
-
-  fileFilter: (req, file, cb) => {
-
-    if (!allowedMimeTypes.has(file.mimetype)) {
-      return cb(new Error("File type not allowed"));
-    }
-
+  fileFilter: (_, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
-
-    if (!allowedExtensions.has(ext)) {
-      return cb(new Error("File extension not allowed"));
-    }
-
-    if (
-      file.originalname.includes("..") ||
-      file.originalname.includes("/") ||
-      file.originalname.includes("\\")
-    ) {
+    if (!allowedMimeTypes.has(file.mimetype) || !allowedExtensions.has(ext))
+      return cb(new Error("File type not allowed"));
+    if (file.originalname.includes("..") || file.originalname.includes("/") || file.originalname.includes("\\"))
       return cb(new Error("Invalid filename"));
-    }
-
     cb(null, true);
   },
-
-  limits: {
-    fileSize: 5 * 1024 * 1024,
-    files: 1,
-  },
-
+  limits: { fileSize: 5*1024*1024, files: 1 },
 });
 
 export async function validateUploadedImage(
-  req: any,
-  res: any,
-  next: any
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-
   if (!req.file) return next();
 
-  let filePath = req.file.path;
-
   try {
-
-    const isValid = await validateImageFile(filePath);
-
-    if (!isValid) {
-
-      await fs.unlink(filePath);
-
-      return res.status(400).json({
-        error: "File is not a valid image or is corrupted"
-      });
-
+    if (!(await validateImageFile(req.file.path))) {
+      await fs.unlink(req.file.path);
+      return res.status(400).json({ error: "File is not valid or corrupted" });
     }
 
-    // sanitizar y convertir a webp
-    const newPath = await sanitizeAndConvertToWebp(filePath);
-
+    const newPath = await sanitizeAndConvertToWebp(req.file.path);
     req.file.path = newPath;
     req.file.filename = path.basename(newPath);
     req.file.mimetype = "image/webp";
 
     next();
-
-  } catch (error) {
-
-    try {
-      await fs.unlink(filePath);
-    } catch {}
-
-    return res.status(500).json({
-      error: "Error processing image"
-    });
-
+  } catch {
+    try { await fs.unlink(req.file.path); } catch {}
+    return res.status(500).json({ error: "Error processing image" });
   }
-
 }
