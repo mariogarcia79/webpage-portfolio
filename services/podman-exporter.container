@@ -1,0 +1,17 @@
+[Unit]
+Description=Podman Prometheus Exporter
+After=observability-pod.service podman.socket
+Requires=observability-pod.service podman.socket
+
+[Container]
+Image=quay.io/navidys/prometheus-podman-exporter:latest
+ContainerName=podman-exporter
+Pod=observability
+
+Volume=/run/user/1000/podman/podman.sock:/run/podman/podman.sock:ro
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
