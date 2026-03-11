@@ -7,13 +7,12 @@ Requires=observability-pod.service
 Image=docker.io/prom/prometheus:latest
 Pod=observability.pod
 ContainerName=prometheus
-
-Volume=%h/.config/containers/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 Volume=prometheus-data.volume:/prometheus
-
+Volume=%h/.config/containers/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 Exec=--config.file=/etc/prometheus/prometheus.yml \
      --storage.tsdb.path=/prometheus \
      --web.enable-lifecycle
+PublishPort=9090
 
 [Service]
 Restart=always
