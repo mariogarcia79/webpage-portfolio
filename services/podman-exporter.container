@@ -5,10 +5,12 @@ Requires=observability-pod.service podman.socket
 
 [Container]
 Image=quay.io/navidys/prometheus-podman-exporter:latest
-ContainerName=podman-exporter
 Pod=observability
+ContainerName=podman-exporter
 
 Volume=/run/user/1000/podman/podman.sock:/run/podman/podman.sock:ro
+PublishPort 9882:9882
+Network=observability.network
 
 [Service]
 Restart=always
