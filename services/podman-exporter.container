@@ -5,7 +5,7 @@ Requires=observability-pod.service podman.socket
 
 [Container]
 Image=quay.io/navidys/prometheus-podman-exporter:latest
-Pod=observability
+Pod=observability.pod
 ContainerName=podman-exporter
 
 Volume=/run/user/1000/podman/podman.sock:/run/podman/podman.sock:ro
