@@ -12,7 +12,6 @@ Volume=%h/.config/containers/prometheus/prometheus.yml:/etc/prometheus/prometheu
 Exec=--config.file=/etc/prometheus/prometheus.yml \
      --storage.tsdb.path=/prometheus \
      --web.enable-lifecycle
-PublishPort=9090
 
 [Service]
 Restart=always
