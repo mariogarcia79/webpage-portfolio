@@ -5,5 +5,4 @@ After=network-online.target
 
 [Pod]
 PodName=observability
-PublishPort=9882:9882
 Network=observability.network
