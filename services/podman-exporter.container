@@ -9,7 +9,7 @@ Pod=observability.pod
 ContainerName=podman-exporter
 
 Volume=/run/user/1000/podman/podman.sock:/run/podman/podman.sock:ro
-PublishPort 9882:9882
+PublishPort=9882:9882
 Network=observability.network
 
 [Service]
