@@ -46,7 +46,7 @@ echo "Copied mongo configuration."
 # copy ./prometheus to ~/.config/containers/prometheus
 # assign appropiate permissions
 cp -r ./prometheus/* /home/deploy/.config/containers/prometheus/
-chmod -R 700 /home/deploy/.config/containers/prometheus
+chmod -R 644 /home/deploy/.config/containers/prometheus
 echo "Copied prometheus configuration."
 
 # copy ~/env/* to ~/.config/containers/env
