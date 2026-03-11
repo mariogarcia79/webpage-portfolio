@@ -20,6 +20,7 @@ echo "Updated source code from git."
 mkdir -p /home/deploy/.config/containers/certs
 mkdir -p /home/deploy/.config/containers/mongo
 mkdir -p /home/deploy/.config/containers/nginx
+mkdir -p /home/deploy/.config/containers/prometheus
 mkdir -p /home/deploy/.config/containers/env
 mkdir -p /home/deploy/.config/containers/systemd
 ln -s /home/deploy/.config/containers/systemd /home/deploy/.config/systemd/user/
@@ -41,6 +42,12 @@ echo "Copied nginx configuration and certs."
 cp -r ./mongo/* /home/deploy/.config/containers/mongo/
 chmod -R 700 /home/deploy/.config/containers/mongo
 echo "Copied mongo configuration."
+
+# copy ./prometheus to ~/.config/containers/prometheus
+# assign appropiate permissions
+cp -r ./prometheus/* /home/deploy/.config/containers/prometheus/
+chmod -R 700 /home/deploy/.config/containers/prometheus
+echo "Copied prometheus configuration."
 
 # copy ~/env/* to ~/.config/containers/env
 # assign appropiate permissions

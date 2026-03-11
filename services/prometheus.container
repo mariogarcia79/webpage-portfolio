@@ -1,0 +1,22 @@
+[Unit]
+Description=Prometheus
+After=observability-pod.service
+Requires=observability-pod.service
+
+[Container]
+Image=docker.io/prom/prometheus:latest
+Pod=observability.pod
+ContainerName=prometheus
+
+Volume=%h/.config/containers/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+Volume=prometheus-data.volume:/prometheus
+
+Exec=--config.file=/etc/prometheus/prometheus.yml \
+     --storage.tsdb.path=/prometheus \
+     --web.enable-lifecycle
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
