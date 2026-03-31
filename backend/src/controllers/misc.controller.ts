@@ -1,7 +1,7 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 
 class MiscController {
-    static async chooseMilkshake(res: Response) {
+    static async chooseMilkshake(req: Request, res: Response) {
         const milkshakes = [
             "Happy Hippo",
             "Platano",
