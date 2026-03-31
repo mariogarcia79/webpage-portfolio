@@ -11,6 +11,7 @@ import UserList from './components/user/UserList';
 import { ProtectedRoute } from './components/page/ProtectedRoute';
 import Footer from './components/page/Footer';
 import NotFound from './components/error/NotFound';
+import MilkshakeRoulette from './components/misc/MilkshakeRoulette';
 
 function App() {
   return (
@@ -69,6 +70,15 @@ function App() {
             element={
               <ProtectedRoute requiredRole="admin">
                 <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="masai"
+            element={
+              <ProtectedRoute>
+                <MilkshakeRoulette />
               </ProtectedRoute>
             }
           />
