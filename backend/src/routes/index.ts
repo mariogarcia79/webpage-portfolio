@@ -4,13 +4,16 @@ import postsRoutes  from "./posts.routes";
 import userRoutes   from "./users.routes";
 import commentsRoutes from "./comments.routes";
 import uploadsRoutes from "./uploads.routes";
+import MiscController from "../controllers/misc.controller";
+import { authenticate, checkRole } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.use( "/auth",  authRoutes);
-router.use( "/posts", postsRoutes);
-router.use( "/users", userRoutes);
-router.use( "/comments", commentsRoutes);
+router.use( "/auth",    authRoutes);
+router.use( "/posts",   postsRoutes);
+router.use( "/users",   userRoutes);
+router.use( "/comments",commentsRoutes);
 router.use( "/uploads", uploadsRoutes);
+router.post("/",      authenticate, MiscController.chooseMilkshake);
 
 export default router;
