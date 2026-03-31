@@ -14,6 +14,6 @@ router.use( "/posts",   postsRoutes);
 router.use( "/users",   userRoutes);
 router.use( "/comments",commentsRoutes);
 router.use( "/uploads", uploadsRoutes);
-router.post("/",      authenticate, MiscController.chooseMilkshake);
+router.get(" /misc",    authenticate, MiscController.chooseMilkshake);
 
 export default router;
