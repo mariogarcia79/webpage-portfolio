@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./MilkshakeRoulette.css";
+import { Wheel } from "react-custom-roulette";
 
 const milkshakes = [
     "Happy Hippo",
@@ -33,59 +33,41 @@ const milkshakes = [
     "Vainilla",
 ];
 
+// Formato que pide la librería
+const data = milkshakes.map((shake) => ({
+    option: shake,
+}));
+
 export default function MilkshakeRoulette() {
-    const [rotation, setRotation] = useState(0);
+    const [mustSpin, setMustSpin] = useState(false);
+    const [prizeNumber, setPrizeNumber] = useState(0);
     const [selected, setSelected] = useState<string | null>(null);
-    const [spinning, setSpinning] = useState(false);
 
     const spin = () => {
-        if (spinning) return;
+        if (mustSpin) return;
 
-        setSpinning(true);
+        const newPrize = Math.floor(Math.random() * data.length);
 
-        const randomIndex = Math.floor(Math.random() * milkshakes.length);
-        const degreesPerItem = 360 / milkshakes.length;
-
-        const extraSpins = 5 * 360; // vueltas completas
-        const finalRotation =
-            extraSpins + (360 - randomIndex * degreesPerItem);
-
-        setRotation((prev) => prev + finalRotation);
-
-        setTimeout(() => {
-            setSelected(milkshakes[randomIndex]);
-            setSpinning(false);
-        }, 4000);
+        setPrizeNumber(newPrize);
+        setMustSpin(true);
     };
 
     return (
         <div className="roulette-container">
-            <div
-                className="roulette"
-                style={{
-                    transform: `rotate(${rotation}deg)`,
+            <Wheel
+                mustStartSpinning={mustSpin}
+                prizeNumber={prizeNumber}
+                data={data}
+                onStopSpinning={() => {
+                    setMustSpin(false);
+                    setSelected(data[prizeNumber].option);
                 }}
-            >
-                {milkshakes.map((shake, index) => {
-                    const angle = (360 / milkshakes.length) * index;
-                    return (
-                        <div
-                            key={index}
-                            className="slice"
-                            style={{
-                                transform: `rotate(${angle}deg)`,
-                            }}
-                        >
-                            <span>{shake}</span>
-                        </div>
-                    );
-                })}
-            </div>
+                backgroundColors={["#ff9f1c", "#2ec4b6"]}
+                textColors={["#ffffff"]}
+            />
 
-            <div className="pointer">▼</div>
-
-            <button onClick={spin} disabled={spinning}>
-                {spinning ? "Girando..." : "Girar"}
+            <button onClick={spin} disabled={mustSpin}>
+                {mustSpin ? "Girando..." : "Girar"}
             </button>
 
             {selected && (
